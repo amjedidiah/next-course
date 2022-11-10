@@ -4,13 +4,7 @@ import Footer from "components/footer";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-
-const getTitle = (path: string) => {
-  const editedPath = path.slice(1);
-  return editedPath
-    ? editedPath.charAt(0).toUpperCase() + editedPath.slice(1)
-    : "Home";
-};
+import getTitle from "utils/get-title.util";
 
 export default function App({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();

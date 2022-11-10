@@ -1,10 +1,5 @@
 import Document, { Html, Main, NextScript, Head } from "next/document";
-
-const fonts = [
-  "/fonts/IBMPlexSans-Bold.ttf",
-  "/fonts/IBMPlexSans-Regular.ttf",
-  "/fonts/IBMPlexSans-SemiBold.ttf",
-];
+import fonts from "utils/fonts.util";
 
 export default class MyDocument extends Document {
   render() {

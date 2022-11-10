@@ -2,18 +2,20 @@ import Banner from "components/banner";
 import CardList from "components/card-list";
 import Image from "next/image";
 import styles from "styles/home.module.scss";
-import coffeeStoresData from "data/coffee-stores.json";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { CoffeeStoreType } from "pages/coffee-store/[cid]";
+import { fetchCoffeeStores } from "lib/coffee-stores.lib";
+import { CoffeeStoreType } from "utils/types/coffee-store.type";
 
 const handleOnBannerClick = () => alert("me");
 
 // Content here will only run on serverSide, and not on client side
 export const getStaticProps: GetStaticProps<{
-  coffeeStores: CoffeeStoreType[];
-}> = () => {
+  coffeeStores: CoffeeStoreType[] | null;
+}> = async () => {
+  const coffeeStores = await fetchCoffeeStores();
+
   return {
-    props: { coffeeStores: coffeeStoresData },
+    props: { coffeeStores },
   };
 };
 
