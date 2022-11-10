@@ -1,8 +1,8 @@
-import Card, { CoffeeStore } from "components/card";
+import Card, { CoffeeStoreType } from "components/card";
 import styles from "styles/card-list.module.scss";
 
 type CardListProps = {
-  list: Array<CoffeeStore>;
+  list: Array<CoffeeStoreType>;
   title: string;
 };
 

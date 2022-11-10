@@ -1,15 +1,16 @@
 import Banner from "components/banner";
 import CardList from "components/card-list";
 import Image from "next/image";
-import { useCallback } from "react";
 import styles from "styles/home.module.scss";
 import coffeeStoresData from "data/coffee-stores.json";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { CoffeeStore } from "pages/coffee-store/[cid]";
+import { CoffeeStoreType } from "pages/coffee-store/[cid]";
+
+const handleOnBannerClick = () => alert("me");
 
 // Content here will only run on serverSide, and not on client side
 export const getStaticProps: GetStaticProps<{
-  coffeeStores: CoffeeStore[];
+  coffeeStores: CoffeeStoreType[];
 }> = () => {
   return {
     props: { coffeeStores: coffeeStoresData },
@@ -19,10 +20,6 @@ export const getStaticProps: GetStaticProps<{
 export default function Home({
   coffeeStores,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const handleOnBannerClick = useCallback(() => {
-    alert("me");
-  }, []);
-
   return (
     <div className={styles.container}>
       <main className={styles.main}>

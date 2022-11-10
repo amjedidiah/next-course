@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "styles/card.module.scss";
-import classnames from "classnames";
+import cls from "classnames";
 
 export type CardProps = {
   id: number;
@@ -13,7 +13,7 @@ export default function Card({ id, name, imgUrl }: CardProps) {
   return (
     <div className={styles.card}>
       <Link href={`/coffee-store/${id}`} className={styles.cardLink}>
-        <div className={classnames(styles.container, "glass")}>
+        <div className={cls(styles.container, "glass")}>
           <div className={styles.cardHeaderWrapper}>
             <h2 className={styles.cardHeader}>{name}</h2>
           </div>
