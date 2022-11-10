@@ -11,6 +11,11 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <meta
+            name="description"
+            content="Coffee Connoisseur built by Jedidiah Amaraegbu"
+          />
+          <link rel="icon" href="/favicon.ico" />
           {fonts.map((font) => (
             <link
               rel="preload"

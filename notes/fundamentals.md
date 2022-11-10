@@ -6,26 +6,55 @@
 
 > SSG, SSR, CSR and ISR in Next.js over just CSR or SSR(with stress) as in CRA
 
-- SSG: Build time generation of HTML pages and pre-downloading of needed content(static assets) - huge performance boost as pages are cached and served from CDN
+#### SSG
 
-  - For SSG pages that call APIs, the APIs are called during the build process and data is fetched. The static page is then  pre-rendered on request .e.g: Products, Blog posts, etc(i.e data that won't get stale in this process)
-  - Implement this in Next with `getStaticProps`
+> Build time generation of HTML pages and pre-downloading of needed content(static assets) - huge performance boost as pages are cached and served from CDN
 
-- SSR: Server side generation of HTML pages - pages serve fresh content on every request(e.g: Dynamic news feed, Netflix)
+- For SSG pages that call APIs, the APIs are called during the build process and data is fetched. The static page is then pre-rendered on request .e.g: Products, Blog posts, etc(i.e data that won't get stale in this process)
+- Implement this in Next with `getStaticProps`
 
-  - Much slower than SSG and ISR.
-  - Available with CRA, but requires complex setup
-  - Data is not cached on CDN
-  - Implement this in Next with `getServersideProps`
+##### `getStaticProps`
 
-- CSR: Client side generation of HTML pages using JS. e.g: Dashboard pages
-  - Fetch data on client-side iff **_page contains frequently updating data that don't need to be pre-rendered_**
+- can only be exported from a page file
+- meant for all routes
+- only runs at build time
+- only runs on server side
+- won't be included in client side bundle
+- on dev, runs on client and server side
+
+##### `getStaticPaths`
+
+- can only be exported from a page file
+- meant for dynamic routes
+- page must also export `getStaticProps`
+- only runs at build time
+- only runs on server side
+- won't be included in client side bundle
+- on dev, runs on client and server side
+
+#### SSR
+
+> Server side generation of HTML pages - pages serve fresh content on every request(e.g: Dynamic news feed, Netflix)
+
+- Much slower than SSG and ISR.
+- Available with CRA, but requires complex setup
+- Data is not cached on CDN
+- Implement this in Next with `getServersideProps`
+
+#### CSR
+
+> Client side generation of HTML pages using JS. e.g: Dashboard pages
+
+- Fetch data on client-side iff **_page contains frequently updating data that don't need to be pre-rendered_**
+
   > SWR: `stale-while-revalidate`
 
-- ISR(Incremental Static Regeneration): generate HTML pages at build time and update them at runtime, after a specific interval(e.g 60s) - SSG + SSR
+#### ISR(Incremental Static Regeneration)
 
-  - Build time generation can take a lot of time with a lot of pages or should a page get stale, the build process has to repeat all over again.
-  - Implement this in Next with `getStaticProps` with `revalidate`
+> Generate HTML pages at build time and update them at runtime, after a specific interval(e.g 60s) - SSG + SSR
+
+- Build time generation can take a lot of time with a lot of pages or should a page get stale, the build process has to repeat all over again.
+- Implement this in Next with `getStaticProps` with `revalidate`
 
 ### Performance
 

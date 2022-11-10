@@ -9,7 +9,7 @@ export default function NotFound() {
   return (
     <>
       <Head>
-        <title>Not Found</title>
+        <title>Not Found | Coffee Connoisseur</title>
       </Head>
       <p>Page {page} not found</p>
     </>
