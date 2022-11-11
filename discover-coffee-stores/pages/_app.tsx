@@ -4,19 +4,19 @@ import Footer from "components/footer";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import getTitle from "utils/get-title.util";
+import getPageTitle from "utils/get-title.util";
 
 export default function App({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
-  const title = useMemo(
-    () => `${getTitle(asPath)} | Coffee Connoisseur`,
+  const pageTitle = useMemo(
+    () => `${getPageTitle(asPath)} | Coffee Connoisseur`,
     [asPath]
   );
 
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <Component {...pageProps} />
       <Footer />

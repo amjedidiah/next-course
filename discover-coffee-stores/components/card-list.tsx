@@ -15,7 +15,7 @@ export default function CardList({ list, title }: CardListProps) {
       <h2 className={styles.heading2}>{title}</h2>
       <div className={styles.cardList}>
         {list.map((item) => (
-          <Card key={item.fsq_id} {...item} />
+          <Card key={item.cid} {...item} />
         ))}
       </div>
     </>
