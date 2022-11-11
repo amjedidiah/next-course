@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "lint": "npx lerna run lint"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "devDependencies": {
+    "lerna": "^5.1.1",
+    "pre-commit": "^1.2.2"
+  }
+}
