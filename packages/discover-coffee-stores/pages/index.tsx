@@ -5,8 +5,9 @@ import styles from "styles/home.module.scss"
 import { GetStaticProps, InferGetStaticPropsType } from "next"
 import { fetchCoffeeStores } from "lib/coffee-stores.lib"
 import { CoffeeStoreType } from "utils/types/coffee-store.type"
-
-const handleOnBannerClick = () => alert("me")
+import { useCallback, useContext, useMemo } from "react"
+import useTrackLocation from "hooks/use-track-location"
+import { StoreContext } from "context/store.context"
 
 // Content here will only run on serverSide, and not on client side
 export const getStaticProps: GetStaticProps<{
@@ -19,16 +20,26 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default function Home({
-  coffeeStores,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  const { coffeeStores, isFetchingStores } = useContext(StoreContext)
+  const { errorMessage, loading, handleTrackLocation } = useTrackLocation()
+  const buttonText = useMemo(() => {
+    if (loading) return "Locating..."
+    if (isFetchingStores) return "Fetching..."
+
+    return "View stores nearby"
+  }, [isFetchingStores, loading])
+
+  const handleOnBannerClick = useCallback(() => {
+    handleTrackLocation()
+  }, [handleTrackLocation])
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <Banner
-          buttonText="View stores nearby"
-          handleOnClick={handleOnBannerClick}
-        />
+        <Banner buttonText={buttonText} handleOnClick={handleOnBannerClick} />
         <div className={styles.heroImage}>
           <Image
             src="/static/hero-image.png"
@@ -38,7 +49,14 @@ export default function Home({
             className={styles.heroImage}
           />
         </div>
-        <CardList title="Toronto Stores" list={coffeeStores} />
+        {errorMessage && <p>Sorry an error occurred: {errorMessage}</p>}
+        {coffeeStores && (
+          <CardList title="Coffee Stores Near Me" list={coffeeStores} />
+        )}
+        <CardList
+          title="Victoria Island Coffee Stores"
+          list={props.coffeeStores}
+        />
       </main>
     </div>
   )

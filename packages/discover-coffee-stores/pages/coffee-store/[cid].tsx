@@ -12,21 +12,20 @@ import Image from "next/image"
 import cls from "classnames"
 import { CoffeeStoreType } from "utils/types/coffee-store.type"
 import { fetchCoffeeStores } from "lib/coffee-stores.lib"
+import { useContext, useEffect, useState } from "react"
+import { StoreContext } from "context/store.context"
 
 const handleUpvoteButton = () => alert("Upvote")
 
 export const getStaticProps: GetStaticProps<{
-  coffeeStore?: CoffeeStoreType | null
+  coffeeStore: CoffeeStoreType | null
 }> = async ({ params }: GetStaticPropsContext) => {
   const coffeeStores = await fetchCoffeeStores()
+  const coffeeStore = coffeeStores
+    ? coffeeStores.find((store) => store.cid.toString() === params?.cid) || null
+    : null
 
-  return {
-    props: {
-      coffeeStore: coffeeStores
-        ? coffeeStores.find((store) => store.cid.toString() === params?.cid)
-        : null,
-    },
-  }
+  return { props: { coffeeStore } }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -42,12 +41,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export default function CoffeeStore({
-  coffeeStore,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter()
+export default function CoffeeStore(
+  initialProps: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore)
+  const {
+    isFallback,
+    query: { cid },
+  } = useRouter()
+  const { coffeeStores } = useContext(StoreContext)
 
-  if (router.isFallback) return <div>Loading...</div>
+  useEffect(() => {
+    if (!coffeeStore)
+      setCoffeeStore(
+        coffeeStores?.find((store) => store.cid === cid) as CoffeeStoreType
+      )
+  }, [cid, coffeeStores, coffeeStore])
+
+  if (isFallback) return <div>Loading...</div>
 
   if (!coffeeStore) return <div>Not found</div>
 

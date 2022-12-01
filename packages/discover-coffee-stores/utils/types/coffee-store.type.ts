@@ -6,4 +6,4 @@ export type CoffeeStoreType = {
   imgUrl: string
 }
 
-export type CoffeeStoresPhotos = string[] | null | undefined
+export type CoffeeStoresPhotos = string[] | null

@@ -2,7 +2,8 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "lint": "npx lerna run lint"
+    "lint": "npx lerna run lint",
+    "coffee": "npx lerna exec --scope=discover-coffee-stores -- yarn dev"
   },
   "pre-commit": [
     "lint"

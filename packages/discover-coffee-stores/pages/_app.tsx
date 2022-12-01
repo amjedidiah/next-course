@@ -5,6 +5,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
 import getPageTitle from "utils/get-title.util"
+import { StoreProvider } from "context/store.context"
 
 export default function App({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter()
@@ -14,12 +15,14 @@ export default function App({ Component, pageProps }: AppProps) {
   )
 
   return (
-    <>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <Component {...pageProps} />
-      <Footer />
-    </>
+    <StoreProvider>
+      <>
+        <Head>
+          <title>{pageTitle}</title>
+        </Head>
+        <Component {...pageProps} />
+        <Footer />
+      </>
+    </StoreProvider>
   )
 }

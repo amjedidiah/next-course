@@ -22,3 +22,22 @@ module.exports = {
 CUSTOM_KEY=customValue
 NEXT_PUBLIC_CUSTOM_KEY=customValue
 ```
+
+### DESTRUCTURING .env VARIABLES
+
+> Destructuring .env variables will work in server side, but not in client side
+
+```ts
+
+// .env.local
+NEXT_PUBLIC_CUSTOM_KEY=customValue
+
+// server side
+const { CUSTOM_KEY } = process.env; // works
+
+// client side
+const { NEXT_PUBLIC_CUSTOM_KEY } = process.env; // undefined
+
+process.env.NEXT_PUBLIC_CUSTOM_KEY // works
+
+```

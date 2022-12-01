@@ -4,28 +4,27 @@ import {
   CoffeeStoreType,
 } from "utils/types/coffee-store.type"
 
-const { FOURSQUARE_API_KEY, UNSPLASH_ACCESS_KEY } = process.env
 const DEFAULT_COFFEE_STORE_IMAGE_URL =
   "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
 
 export async function fetchCoffeeStores(
-  limit = 6 as number,
-  lng = 6.457493278054195 as number,
-  lat = 3.424143107781287 as number
+  latLng = "6.457493278054195,3.424143107781287",
+  limit = 6
 ): Promise<CoffeeStoreType[] | null> {
-  let result = null
+  let result = null as CoffeeStoreType[] | null
 
-  try {
-    const response = await fetch(
-      `https://api.foursquare.com/v3/places/search?query=coffee&ll=${lng}%2C${lat}&limit=${limit}`,
+  handler: try {
+    const data = await fetch(
+      `https://api.foursquare.com/v3/places/search?query=coffee&ll=${latLng}&limit=${limit}`,
       {
         headers: {
-          Authorization: FOURSQUARE_API_KEY as string,
+          Authorization: process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY as string,
         },
       }
-    )
-    const data = await response.json()
+    ).then((res) => res.json())
     const images = await fetchCoffeeStoresPhotos()
+
+    if (!data.results) break handler
 
     result = data.results.map((result: any, i: number) => {
       const neighborhood = result.location.neighborhood as string
@@ -48,9 +47,9 @@ export async function fetchCoffeeStores(
 export async function fetchCoffeeStoresPhotos(): Promise<CoffeeStoresPhotos> {
   let result = null as CoffeeStoresPhotos
 
-  try {
+  handler: try {
     const unsplash = createApi({
-      accessKey: UNSPLASH_ACCESS_KEY as string,
+      accessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string,
     })
 
     const response = await unsplash.search.getPhotos({
@@ -61,7 +60,7 @@ export async function fetchCoffeeStoresPhotos(): Promise<CoffeeStoresPhotos> {
 
     const data = await response.response
 
-    if (!data) return undefined
+    if (!data) break handler
 
     result = data.results.map((result) => result.urls.raw)
   } catch (err) {
