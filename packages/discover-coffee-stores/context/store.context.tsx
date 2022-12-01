@@ -1,4 +1,3 @@
-import useTrackLocation from "hooks/use-track-location"
 import { fetchCoffeeStores } from "lib/coffee-stores.lib"
 import { createContext, useEffect, useState } from "react"
 import { CoffeeStoreType } from "utils/types/coffee-store.type"
@@ -16,7 +15,7 @@ export const StoreContext = createContext<StoreContextType>({
 })
 
 export const StoreProvider = ({ children }: { children: JSX.Element }) => {
-  const [latLng, setLatLng] = useState("");
+  const [latLng, setLatLng] = useState("")
   const [coffeeStores, setCoffeeStores] = useState<CoffeeStoreType[] | null>(
     null
   )

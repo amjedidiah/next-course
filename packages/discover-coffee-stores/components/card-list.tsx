@@ -8,9 +8,9 @@ type CardListProps = {
 }
 
 export default function CardList({ list, title }: CardListProps) {
-  if (!list) return <p>Error fetching stores</p>;
+  if (!list) return <p>Error fetching stores</p>
 
-  if(!list.length) return <p>No stores found</p>;
+  if (!list.length) return <p>No stores found</p>
 
   return (
     <>

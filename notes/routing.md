@@ -8,6 +8,8 @@
 
 3. Dynamic routes: defined brackets: `/coffee-store/[id]`
 
+4. Catch-all routes: defined brackets with `...`: `/coffee-store/[...id]`
+
 ## Types of Linking
 
 1. Non-dynamic/known pages: `<Link to=<route-name> />`
