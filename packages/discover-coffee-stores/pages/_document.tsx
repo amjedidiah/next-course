@@ -23,7 +23,7 @@ export default class MyDocument extends Document {
         </Head>
         {/* Add things for the head tag that should be on all the pages, here */}
         <body>
-          <Main></Main> {/* Adds a div with class: __next to the page */}
+          <Main /> {/* Adds a div with class: __next to the page */}
           <NextScript /> {/*  Adds a number of script tags to the document */}
         </body>
       </Html>

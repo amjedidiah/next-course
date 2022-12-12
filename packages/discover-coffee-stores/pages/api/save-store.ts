@@ -4,24 +4,21 @@ import ServerResponse from "utils/types/server-response"
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<
-    | ServerResponse<{ id: string; fields: AirtableRecord }>
-    | ServerResponse<null>
-  >
+  res: NextApiResponse<ServerResponse<AirtableRecord | null>>
 ) {
   try {
-    const { id, name, address, neighborhood, upvotes, imgUrl } = req.body
+    const { cid: id, name, address, neighborhood, imgUrl } = req.body
 
     if (req.method !== "POST")
       throw new ServerResponse(null, "Only POST requests allowed", 405)
 
     // Check for required fields
-    if (!(id && name && upvotes))
+    if (!(id && name))
       throw new ServerResponse(null, "Missing required fields", 400)
 
     // Check if the store already exists
     const existingStore = await table
-      .select({ filterByFormula: `id = "${id}"` })
+      .select({ filterByFormula: `id = "${id}"`, maxRecords: 1 })
       .firstPage()
 
     if (existingStore.length)
@@ -34,17 +31,14 @@ export default async function handler(
           [tableColumnIds.name]: name,
           [tableColumnIds.address]: address,
           [tableColumnIds.neighborhood]: neighborhood,
-          [tableColumnIds.upvotes]: upvotes,
+          [tableColumnIds.upvotes]: 0,
           [tableColumnIds.imgUrl]: imgUrl,
         },
       },
     ])
 
     return res.status(200).json({
-      data: {
-        id: createdRecords[0].id,
-        fields: createdRecords[0].fields,
-      },
+      data: createdRecords[0].fields,
       message: "Store created successfully",
       statusCode: 201,
       name: "Success",

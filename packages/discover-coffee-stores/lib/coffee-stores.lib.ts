@@ -2,6 +2,7 @@ import { createApi } from "unsplash-js"
 import {
   CoffeeStoresPhotos,
   CoffeeStoreType,
+  CoffeeStoreTypeResponse,
 } from "utils/types/coffee-store.type"
 
 const DEFAULT_COFFEE_STORE_IMAGE_URL =
@@ -26,7 +27,7 @@ export async function fetchCoffeeStores(
 
     if (!data.results) break handler
 
-    result = data.results.map((result: any, i: number) => {
+    result = data.results.map((result: CoffeeStoreTypeResponse, i: number) => {
       const neighborhood = result.location.neighborhood as string
 
       return {
@@ -70,14 +71,46 @@ export async function fetchCoffeeStoresPhotos(): Promise<CoffeeStoresPhotos> {
   return result
 }
 
-export const fetchCoffeeStore = async (id: string): Promise<void> =>
-  fetch(`/api/get-store/${id}`).then((res) => res.json())
+export const fetchCoffeeStore = async (
+  id: string
+): Promise<CoffeeStoreType | null> =>
+  fetch(`/api/get-store/${id}`)
+    .then((res) => res.json())
+    .then(({ data }) => data)
+    .catch((err) => {
+      console.error(err)
+      return null
+    })
 
-export const saveStore = async (store: CoffeeStoreType): Promise<void> =>
+export const saveCoffeeStore = async (
+  store: CoffeeStoreType
+): Promise<CoffeeStoreType | null> =>
   fetch("/api/save-store", {
     method: "POST",
     body: JSON.stringify(store),
-  }).then((res) => res.json())
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then(({ data }) => data)
+    .catch((err) => {
+      console.error(err)
+      return null
+    })
 
-export const upvoteStore = async (id: string): Promise<void> =>
-  fetch(`/api/upvote-store/${id}`).then((res) => res.json())
+export const upvoteStore = async (
+  id: string
+): Promise<CoffeeStoreType | null> =>
+  fetch(`/api/upvote-store/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then(({ data }) => data)
+    .catch((err) => {
+      console.error(err)
+      return null
+    })

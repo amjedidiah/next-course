@@ -4,10 +4,7 @@ import ServerResponse from "utils/types/server-response"
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<
-    | ServerResponse<{ id: string; fields: AirtableRecord }>
-    | ServerResponse<null>
-  >
+  res: NextApiResponse<ServerResponse<AirtableRecord | null>>
 ) {
   try {
     const { id } = req.query
@@ -41,10 +38,7 @@ export default async function handler(
     ])
 
     return res.status(200).json({
-      data: {
-        id: updatedRecord[0].id,
-        fields: updatedRecord[0].fields,
-      },
+      data: updatedRecord[0].fields,
       message: "Store upvoted successfully",
       statusCode: 200,
       name: "Success",

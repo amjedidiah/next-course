@@ -4,10 +4,7 @@ import ServerResponse from "utils/types/server-response"
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<
-    | ServerResponse<{ id: string; fields: AirtableRecord }>
-    | ServerResponse<null>
-  >
+  res: NextApiResponse<ServerResponse<AirtableRecord | null>>
 ) {
   try {
     const { id } = req.query
@@ -26,10 +23,7 @@ export default async function handler(
       throw new ServerResponse(null, "Store does not exist", 404)
 
     return res.status(200).json({
-      data: {
-        id: existingStore[0].id,
-        fields: existingStore[0].fields,
-      },
+      data: existingStore[0].fields,
       message: "Store retrieved successfully",
       statusCode: 200,
       name: "Success",
