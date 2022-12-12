@@ -1,4 +1,4 @@
-import table, { AirtableRecord } from "config/airtable.config"
+import { AirtableRecord, getExistingStore } from "config/airtable.config"
 import { NextApiRequest, NextApiResponse } from "next"
 import ServerResponse from "utils/types/server-response"
 
@@ -15,9 +15,7 @@ export default async function handler(
     if (!id) throw new ServerResponse(null, "id is required", 400)
 
     // Check if the store already exists
-    const existingStore = await table
-      .select({ filterByFormula: `id = "${id}"`, maxRecords: 1 })
-      .firstPage()
+    const existingStore = await getExistingStore(id as string)
 
     if (!existingStore.length)
       throw new ServerResponse(null, "Store does not exist", 404)

@@ -4,7 +4,6 @@ import {
   GetStaticProps,
   GetStaticPropsContext,
   InferGetStaticPropsType,
-  NextApiResponse,
 } from "next"
 import Link from "next/link"
 import Head from "next/head"
@@ -20,6 +19,8 @@ import {
 } from "lib/coffee-stores.lib"
 import { useCallback, useContext, useEffect, useState } from "react"
 import { StoreContext } from "context/store.context"
+import useSWR from "swr"
+import fetcher from "lib/fetcher.lib"
 
 export const getStaticProps: GetStaticProps<{
   coffeeStore: CoffeeStoreType | null
@@ -54,14 +55,20 @@ export default function CoffeeStore(
     query: { cid },
   } = useRouter()
   const { coffeeStores } = useContext(StoreContext)
+  const { data, error } = useSWR(
+    `/api/get-store/${cid}`,
+    fetcher<CoffeeStoreType>
+  )
+  const [upvotes, setUpvotes] = useState(0)
+  const [upvoting, setUpvoting] = useState(false)
 
   useEffect(() => {
     const initStore = async () => {
-      let foundStore;
+      let foundStore
 
-      if (coffeeStore){
-        const newDBStore = await saveCoffeeStore(coffeeStore);
-        if (newDBStore) foundStore = newDBStore;
+      if (coffeeStore) {
+        const newDBStore = await saveCoffeeStore(coffeeStore)
+        if (newDBStore) foundStore = newDBStore
       }
 
       // If the store is not statically generated, fetch it from context
@@ -88,17 +95,30 @@ export default function CoffeeStore(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cid])
 
-  const handleUpvoteButton = useCallback(async () => {
-    const updatedCoffeeStore = await upvoteStore(cid as string)
+  useEffect(() => {
+    if (data) {
+      setCoffeeStore(data)
+      setUpvotes(data.upvotes || 0)
+    }
+  }, [data])
 
-    if (updatedCoffeeStore) setCoffeeStore(updatedCoffeeStore)
+  const handleUpvoteButton = useCallback(async () => {
+    try {
+      setUpvoting(true)
+      const updatedCoffeeStore = await upvoteStore(cid as string)
+      if (updatedCoffeeStore) setUpvotes(updatedCoffeeStore.upvotes || 0)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setUpvoting(false)
+    }
   }, [cid])
 
   if (isFallback) return <div>Loading...</div>
 
   if (!coffeeStore) return <div>Not found</div>
 
-  const { name, imgUrl, address, neighborhood, upvotes } = coffeeStore
+  const { name, imgUrl, address, neighborhood } = coffeeStore
 
   return (
     <div className={styles.layout}>
@@ -154,8 +174,12 @@ export default function CoffeeStore(
             <p className={styles.text}>{upvotes}</p>
           </div>
 
-          <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
-            Up vote!
+          <button
+            className={styles.upvoteButton}
+            onClick={handleUpvoteButton}
+            disabled={upvoting}
+          >
+            {upvoting ? "Upvoting..." : "Up vote!"}
           </button>
         </div>
       </div>
