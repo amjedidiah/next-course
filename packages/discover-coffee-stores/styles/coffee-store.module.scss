@@ -132,9 +132,14 @@
     border: 0px;
 
     font-size: 1rem;
-  }
 
-  .upvoteButton:hover {
-    background-color: var(--text-purple);
+    &:hover {
+      background-color: var(--text-purple);
+    }
+
+    &[disabled] {
+      background-color: var(--text-purple-light);
+      cursor: not-allowed;
+    }
   }
 }

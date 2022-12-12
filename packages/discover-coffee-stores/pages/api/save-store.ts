@@ -1,4 +1,8 @@
-import table, { AirtableRecord, getExistingStore, tableColumnIds } from "config/airtable.config"
+import table, {
+  AirtableRecord,
+  getExistingStore,
+  tableColumnIds,
+} from "config/airtable.config"
 import { NextApiRequest, NextApiResponse } from "next"
 import ServerResponse from "utils/types/server-response"
 

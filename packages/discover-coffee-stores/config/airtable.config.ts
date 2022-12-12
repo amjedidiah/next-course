@@ -22,8 +22,7 @@ export const tableColumnIds = {
 
 const table = base(AIRTABLE_TABLE_ID)
 
-export const getExistingStore = (id: string) => table
-      .select({ filterByFormula: `id = "${id}"`, maxRecords: 1 })
-      .firstPage()
+export const getExistingStore = (id: string) =>
+  table.select({ filterByFormula: `id = "${id}"`, maxRecords: 1 }).firstPage()
 
 export default table
