@@ -16,7 +16,7 @@ export default async function handler(
       throw new ServerResponse(null, "Only POST requests allowed", 405)
 
     // Check for required fields
-    if (!id || !name || !upvotes)
+    if (!(id && name && upvotes))
       throw new ServerResponse(null, "Missing required fields", 400)
 
     // Check if the store already exists
@@ -49,9 +49,9 @@ export default async function handler(
       statusCode: 201,
       name: "Success",
     })
-  } catch ({ data, message, statusCode, name }: any) {
+  } catch ({ data, message, statusCode, name }: unknown) {
     return res
-      .status(statusCode as number)
+      .status((statusCode ?? 500) as number)
       .json({ data, message, statusCode, name } as ServerResponse<null>)
   }
 }

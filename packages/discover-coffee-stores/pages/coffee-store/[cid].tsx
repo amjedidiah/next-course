@@ -11,7 +11,11 @@ import styles from "styles/coffee-store.module.scss"
 import Image from "next/image"
 import cls from "classnames"
 import { CoffeeStoreType } from "utils/types/coffee-store.type"
-import { fetchCoffeeStores } from "lib/coffee-stores.lib"
+import {
+  fetchCoffeeStore,
+  fetchCoffeeStores,
+  saveStore,
+} from "lib/coffee-stores.lib"
 import { useContext, useEffect, useState } from "react"
 import { StoreContext } from "context/store.context"
 
@@ -52,10 +56,19 @@ export default function CoffeeStore(
   const { coffeeStores } = useContext(StoreContext)
 
   useEffect(() => {
-    if (!coffeeStore)
-      setCoffeeStore(
-        coffeeStores?.find((store) => store.cid === cid) as CoffeeStoreType
-      )
+    const initStore = async () => {
+      let dynamicCoffeeStore
+      if (coffeeStores) {
+        dynamicCoffeeStore = coffeeStores.find((store) => store.cid === cid)
+        saveStore(dynamicCoffeeStore as CoffeeStoreType)
+      } else {
+        dynamicCoffeeStore = await fetchCoffeeStore(cid as string)
+      }
+
+      if (dynamicCoffeeStore) setCoffeeStore(dynamicCoffeeStore)
+    }
+
+    if (!coffeeStore) initStore()
   }, [cid, coffeeStores, coffeeStore])
 
   if (isFallback) return <div>Loading...</div>

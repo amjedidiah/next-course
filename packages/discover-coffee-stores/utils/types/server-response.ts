@@ -2,9 +2,9 @@ export default class ServerResponse<T> extends Error {
   constructor(
     public data: T,
     public message: string,
-    public statusCode: number,
+    public statusCode: number
   ) {
-    super(message);
+    super(message)
 
     this.statusCode = statusCode
     this.data = data

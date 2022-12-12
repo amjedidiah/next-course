@@ -1,9 +1,6 @@
 const Airtable = require("airtable")
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID
-)
-
-export default base(process.env.AIRTABLE_TABLE_ID)
+const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID } = process.env
+const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID)
 
 export type AirtableRecord = {
   id: string
@@ -20,5 +17,7 @@ export const tableColumnIds = {
   address: "fldQ8TptP1ZJNjPBW",
   neighborhood: "fldSdOY43NqSLZj0T",
   upvotes: "fldR8xeCcHCc3pz0L",
-  imgUrl: "fldSR015VZzziL0CW"
+  imgUrl: "fldSR015VZzziL0CW",
 }
+
+export default base(AIRTABLE_TABLE_ID)

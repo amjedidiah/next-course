@@ -10,26 +10,32 @@ export default async function handler(
   >
 ) {
   try {
-    const { airtableId, upvotes } = req.body
+    const { id } = req.query
 
     if (req.method !== "PATCH")
       throw new ServerResponse(null, "Only PATCH requests allowed", 405)
 
     // Check for required fields
-    if (!airtableId || !upvotes)
-      throw new ServerResponse(null, "Missing required fields", 400)
+    if (!id) throw new ServerResponse(null, "Missing required fields", 400)
 
     // Check if the store already exists
-    const existingStore = await table.find(airtableId)
+    const existingStore = await table
+      .select({ filterByFormula: `id = "${id}"`, maxRecords: 1 })
+      .firstPage()
 
     if (!existingStore.length)
       throw new ServerResponse(null, "Store does not exist", 404)
+
+    const {
+      id: airtableId,
+      fields: { upvotes },
+    } = existingStore[0]
 
     const updatedRecord = await table.update([
       {
         id: airtableId,
         fields: {
-         [tableColumnIds.upvotes]: upvotes,
+          [tableColumnIds.upvotes]: upvotes + 1,
         },
       },
     ])
@@ -43,9 +49,9 @@ export default async function handler(
       statusCode: 200,
       name: "Success",
     })
-  } catch ({ data, message, statusCode, name }: any) {
+  } catch ({ data, message, statusCode, name }: unknown) {
     return res
-      .status(statusCode as number)
+      .status((statusCode ?? 500) as number)
       .json({ data, message, statusCode, name } as ServerResponse<null>)
   }
 }

@@ -69,3 +69,15 @@ export async function fetchCoffeeStoresPhotos(): Promise<CoffeeStoresPhotos> {
 
   return result
 }
+
+export const fetchCoffeeStore = async (id: string): Promise<void> =>
+  fetch(`/api/get-store/${id}`).then((res) => res.json())
+
+export const saveStore = async (store: CoffeeStoreType): Promise<void> =>
+  fetch("/api/save-store", {
+    method: "POST",
+    body: JSON.stringify(store),
+  }).then((res) => res.json())
+
+export const upvoteStore = async (id: string): Promise<void> =>
+  fetch(`/api/upvote-store/${id}`).then((res) => res.json())

@@ -34,9 +34,9 @@ export default async function handler(
       statusCode: 200,
       name: "Success",
     })
-  } catch ({ data, message, statusCode, name }: any) {
+  } catch ({ data, message, statusCode, name }: unknown) {
     return res
-      .status(statusCode as number)
+      .status((statusCode ?? 500) as number)
       .json({ data, message, statusCode, name } as ServerResponse<null>)
   }
 }
