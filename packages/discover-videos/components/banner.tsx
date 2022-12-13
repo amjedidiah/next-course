@@ -21,20 +21,25 @@ export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
             <p className={styles["first-letter"]}>N</p>
             <p className={styles.series}>S E R I E S</p>
           </div>
-          <h3>{title}</h3>
-          <h3>{subTitle}</h3>
+          <h3 className={styles.title}>{title}</h3>
+          <h3 className={styles["sub-title"]}>{subTitle}</h3>
           <div className={styles["play-button-wrapper"]}>
             <button className={styles["play-button"]} onClick={handleOnPlay}>
-              <Image src="/static/play_arrow.svg" alt="play-icon" width={32} height={32} />
+              <Image
+                src="/static/play_arrow.svg"
+                alt="play icon"
+                width={32}
+                height={32}
+              />
               <span className={styles["play-text"]}>Play</span>
             </button>
           </div>
         </div>
-        <div
-          style={{ backgroundImage: `url(${imgUrl})` }}
-          className={styles["banner-cover"]}
-        />
       </div>
+      <div
+        style={{ backgroundImage: `url(${imgUrl})` }}
+        className={styles["banner-cover"]}
+      />
     </div>
   );
 }
