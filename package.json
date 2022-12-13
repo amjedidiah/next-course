@@ -5,7 +5,10 @@
     "lint": "npx lerna exec -- yarn lint",
     "dev:coffee": "npx lerna exec --scope=discover-coffee-stores -- yarn dev",
     "build:coffee": "npx lerna exec --scope=discover-coffee-stores -- yarn build",
-    "start:coffee": "npx lerna exec --scope=discover-coffee-stores -- yarn start"
+    "start:coffee": "npx lerna exec --scope=discover-coffee-stores -- yarn start",
+    "dev:videos": "npx lerna exec --scope=discover-videos -- yarn dev",
+    "build:videos": "npx lerna exec --scope=discover-videos -- yarn build",
+    "start:videos": "npx lerna exec --scope=discover-videos -- yarn start"
   },
   "pre-commit": [
     "lint"

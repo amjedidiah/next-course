@@ -25,7 +25,7 @@ export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
           <h3>{subTitle}</h3>
           <div className={styles["play-button-wrapper"]}>
             <button className={styles["play-button"]} onClick={handleOnPlay}>
-              <Image src="" alt="play-icon" width={32} height={32} />
+              <Image src="/static/play_arrow.svg" alt="play-icon" width={32} height={32} />
               <span className={styles["play-text"]}>Play</span>
             </button>
           </div>

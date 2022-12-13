@@ -55,13 +55,16 @@ export default function CoffeeStore(
     query: { cid },
   } = useRouter()
   const { coffeeStores } = useContext(StoreContext)
-  const { data, isLoading } = useSWR(`/api/get-store/${cid}`, fetcher<CoffeeStoreType>)
+  const { data, isLoading } = useSWR(
+    `/api/get-store/${cid}`,
+    fetcher<CoffeeStoreType>
+  )
   const [upvotes, setUpvotes] = useState(0)
   const [upvoting, setUpvoting] = useState(false)
 
   useEffect(() => {
     const initStore = async () => {
-      let foundStore = data;
+      let foundStore = data
 
       if (!foundStore && coffeeStore) {
         const newDBStore = await saveCoffeeStore(coffeeStore)
@@ -80,7 +83,7 @@ export default function CoffeeStore(
       if (foundStore) setCoffeeStore(foundStore)
     }
 
-    if(!isLoading) initStore()
+    if (!isLoading) initStore()
 
     // Added to run this command only when cid is changed
     // eslint-disable-next-line react-hooks/exhaustive-deps
