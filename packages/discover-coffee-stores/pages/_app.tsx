@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 import { useMemo } from "react"
 import getPageTitle from "utils/get-title.util"
 import { StoreProvider } from "context/store.context"
+import fonts from "utils/fonts.util"
 
 export default function App({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter()
@@ -19,9 +20,16 @@ export default function App({ Component, pageProps }: AppProps) {
       <>
         <Head>
           <title>{pageTitle}</title>
+          <meta
+            name="description"
+            content="Coffee Connoisseur built by Jedidiah Amaraegbu"
+          />
+          <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Component {...pageProps} />
-        <Footer />
+        <main className={fonts.className}>
+          <Component {...pageProps} />
+          <Footer />
+        </main>
       </>
     </StoreProvider>
   )

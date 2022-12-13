@@ -47,6 +47,7 @@ export default function Home(
             width={700}
             height={400}
             className={styles.heroImage}
+            priority
           />
         </div>
         {errorMessage && <p>Sorry an error occurred: {errorMessage}</p>}
