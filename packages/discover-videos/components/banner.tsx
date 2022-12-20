@@ -1,17 +1,17 @@
-import Image from "next/image";
-import { useCallback } from "react";
-import styles from "../styles/banner.module.scss";
+import Image from "next/image"
+import { useCallback } from "react"
+import styles from "../styles/banner.module.scss"
 
 type BannerProps = {
-  title: string;
-  subTitle: string;
-  imgUrl: string;
-};
+  title: string
+  subTitle: string
+  imgUrl: string
+}
 
 export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
   const handleOnPlay = useCallback(() => {
-    console.log("play");
-  }, []);
+    console.log("play")
+  }, [])
 
   return (
     <div className={styles["container"]}>
@@ -22,7 +22,7 @@ export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
             <p className={styles.series}>S E R I E S</p>
           </div>
           <h3 className={styles.title}>{title}</h3>
-          <h3 className={styles["sub-title"]}>{subTitle}</h3>
+          <h4 className={styles["sub-title"]}>{subTitle}</h4>
           <div className={styles["play-button-wrapper"]}>
             <button className={styles["play-button"]} onClick={handleOnPlay}>
               <Image
@@ -41,5 +41,5 @@ export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
         className={styles["banner-cover"]}
       />
     </div>
-  );
+  )
 }

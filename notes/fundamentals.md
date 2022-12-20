@@ -6,7 +6,7 @@
 
 > SSG, SSR, CSR and ISR in Next.js over just CSR or SSR(with stress) as in CRA
 
-#### SSG
+#### SSG: HTML at build time
 
 > Build time generation of HTML pages and pre-downloading of needed content(static assets) - huge performance boost as pages are cached and served from CDN
 
@@ -32,16 +32,22 @@
 - won't be included in client side bundle
 - on dev, runs on client and server side
 
-#### SSR
+#### SSR / Dynamic Rendering: new HTML for every request
 
 > Server side generation of HTML pages - pages serve fresh content on every request(e.g: Dynamic news feed, Netflix)
 
+- can only be exported from a page file
+- meant for all routes
+- only runs on server side
+- won't be included in client side bundle
+- on dev, runs on client and server side
+- page must export `getServerSideProps`
 - Much slower than SSG and ISR.
 - Available with CRA, but requires complex setup
 - Data is not cached on CDN
 - Implement this in Next with `getServersideProps`
 
-#### CSR
+#### CSR: HTML generated from JS
 
 > Client side generation of HTML pages using JS. e.g: Dashboard pages
 
@@ -49,7 +55,7 @@
 
   > SWR: `stale-while-revalidate`
 
-#### ISR(Incremental Static Regeneration)
+#### ISR(Incremental Static Regeneration): HTML at build time + new HTML for every request or at specific interval
 
 > Generate HTML pages at build time and update them at runtime, after a specific interval(e.g 60s) - SSG + SSR
 

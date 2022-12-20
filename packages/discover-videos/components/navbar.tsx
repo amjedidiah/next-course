@@ -74,7 +74,7 @@ export default function Navbar({ username }: NavbarProps) {
                     className={styles["link-name"]}
                     onClick={handleSignOut}
                   >
-                    Sign Out
+                    Logout
                   </button>
                   <div className={styles["line-wrapper"]} />
                 </div>
