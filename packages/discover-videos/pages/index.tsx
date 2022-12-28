@@ -3,7 +3,7 @@ import Banner from "components/banner"
 import Navbar from "components/navbar"
 import styles from "styles/home.module.scss"
 import Section from "components/section"
-import getVideos, { Video } from "lib/videos"
+import getVideos, { Video } from "lib/videos.lib"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -33,7 +33,7 @@ export default function Home(
       </Head>
 
       <div className={styles.main}>
-        <Navbar username="jedi@jay.com" />
+        <Navbar />
         <Banner
           title="Clifford the red dog"
           subTitle="a very cute dog"

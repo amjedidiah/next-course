@@ -1,6 +1,6 @@
 import styles from "styles/section.module.scss"
 import Card from "components/card"
-import { Video } from "lib/videos"
+import { Video } from "lib/videos.lib"
 
 type SectionProps = {
   title: string
@@ -15,7 +15,7 @@ export default function Section({ title, videos, size }: SectionProps) {
       {videos && (
         <div className={styles.content}>
           {videos.map((video, idx) => (
-            <Card key={idx} count={idx} size={size} {...video} />
+            <Card key={`${video?.title}-${idx}`} count={idx} size={size} {...video} />
           ))}
         </div>
       )}

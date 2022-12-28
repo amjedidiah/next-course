@@ -3,7 +3,7 @@ import styles from "styles/card.module.scss"
 import cls from "classnames"
 import { SyntheticEvent, useCallback, useMemo, useState } from "react"
 import { motion } from "framer-motion"
-import { Video } from "lib/videos"
+import { Video } from "lib/videos.lib"
 
 interface CardProps extends Video {
   size?: "sm" | "md" | "lg"

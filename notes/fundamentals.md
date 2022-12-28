@@ -36,6 +36,8 @@
 
 > Server side generation of HTML pages - pages serve fresh content on every request(e.g: Dynamic news feed, Netflix)
 
+##### `getServerSideProps`
+
 - can only be exported from a page file
 - meant for all routes
 - only runs on server side
@@ -45,7 +47,6 @@
 - Much slower than SSG and ISR.
 - Available with CRA, but requires complex setup
 - Data is not cached on CDN
-- Implement this in Next with `getServersideProps`
 
 #### CSR: HTML generated from JS
 
@@ -72,7 +73,7 @@
 ### File-based routing and SEO
 
 - Each file/folder in the `pages` directory is mapped to a route. Supports dynamic routes
-- API folder for serverless functions
+- This also applies to the API folder, which is used for serverless functions
 
 ### Serverless Functions
 

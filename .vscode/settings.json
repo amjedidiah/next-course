@@ -1,18 +1,24 @@
 {
-    "cSpell.words": [
-        "airtable",
-        "Airtable",
-        "darkhorse",
-        "esnext",
-        "fldf",
-        "fldshkfdsh",
-        "neighborhood",
-        "prelint",
-        "Roboto",
-        "sass",
-        "Serverside",
-        "unsplash",
-        "webp",
-        "Zzzi"
-    ]
+  "cSpell.words": [
+    "airtable",
+    "Airtable",
+    "Ccontent",
+    "Cstatistics",
+    "darkhorse",
+    "esnext",
+    "fldf",
+    "fldshkfdsh",
+    "neighborhood",
+    "prelint",
+    "Roboto",
+    "sass",
+    "Serverside",
+    "unsplash",
+    "webp",
+    "Zzzi"
+  ],
+  "eslint.workingDirectories": [
+    "packages/discover-coffee-stores",
+    "packages/discover-videos"
+  ]
 }
