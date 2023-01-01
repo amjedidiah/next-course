@@ -37,7 +37,7 @@ export default async function getVideos(search?: string): Promise<Video[]> {
       imgUrl: video?.snippet?.thumbnails?.high?.url,
     }))
   } catch (error) {
-    console.error({ error})
+    console.error({ error })
     return []
   }
 }

@@ -3,19 +3,19 @@ import { useEffect, useState } from "react"
 
 export const useRouteChange = () => {
   const router = useRouter()
-  const [isRouteChanged, setIsRouteChanged] = useState(false)
+  const [isRouteChanging, setIsRouteChanging] = useState(false)
 
   useEffect(() => {
-    router.events.on("routeChangeStart", () => setIsRouteChanged(false))
-    router.events.on("routeChangeComplete", () => setIsRouteChanged(true))
-    router.events.on("routeChangeError", () => setIsRouteChanged(true))
+    router.events.on("routeChangeStart", () => setIsRouteChanging(true))
+    router.events.on("routeChangeComplete", () => setIsRouteChanging(false))
+    router.events.on("routeChangeError", () => setIsRouteChanging(false))
 
     return () => {
-      router.events.off("routeChangeStart", () => setIsRouteChanged(false))
-      router.events.off("routeChangeComplete", () => setIsRouteChanged(true))
-      router.events.off("routeChangeError", () => setIsRouteChanged(true))
+      router.events.off("routeChangeStart", () => setIsRouteChanging(true))
+      router.events.off("routeChangeComplete", () => setIsRouteChanging(false))
+      router.events.off("routeChangeError", () => setIsRouteChanging(false))
     }
   }, [router.events])
 
-  return { isRouteChanged, router }
+  return { isRouteChanging }
 }

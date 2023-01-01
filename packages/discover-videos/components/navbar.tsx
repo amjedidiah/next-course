@@ -1,34 +1,16 @@
-import { useMagicUserMetadata } from "hooks/use-magic-user"
-import { useRouteChange } from "hooks/use-route-change"
-import magic from "lib/magic.lib"
+import useMagicUserMetadata from "hooks/use-magic-user"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useState } from "react"
-import styles from "../styles/navbar.module.scss"
+import styles from "styles/navbar.module.scss"
 
 type NavbarProps = {
   minimal?: boolean
 }
 
 export default function Navbar({ minimal }: NavbarProps) {
-  const {router} = useRouteChange()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { userMetadata, isFetching } = useMagicUserMetadata()
-
-  const handleSignOut = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault()
-
-    if (!magic) return
-
-    // Sign out
-    await magic.user.logout()
-
-    // Head to login
-    router.push("/login")
-
-    // NOTE: We don't need to add the router as a dependency
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const {userMetadata} = useMagicUserMetadata()
 
   const toggleDropdown = useCallback(
     () => setIsDropdownOpen(!isDropdownOpen),
@@ -79,13 +61,11 @@ export default function Navbar({ minimal }: NavbarProps) {
               {isDropdownOpen && (
                 <div className={styles["nav-dropdown"]}>
                   <div>
-                    <button
-                      type="button"
-                      className={styles["link-name"]}
-                      onClick={handleSignOut}
-                    >
-                      Logout
-                    </button>
+                    <Link href="/api/logout" legacyBehavior>
+                      <button type="button" className={styles["link-name"]}>
+                        Logout
+                      </button>
+                    </Link>
                     <div className={styles["line-wrapper"]} />
                   </div>
                 </div>

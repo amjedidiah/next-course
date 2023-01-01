@@ -5,6 +5,8 @@ import styles from "styles/home.module.scss"
 import Section from "components/section"
 import getVideos, { Video } from "lib/videos.lib"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import useMagicUserMetadata from "hooks/use-magic-user"
+import Loader from "components/loader"
 
 export const getServerSideProps: GetServerSideProps<{
   disneyVideos: Video[] | null
@@ -25,6 +27,10 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  const {userMetadata, isLoading} = useMagicUserMetadata({ redirectTo: '/login' })
+
+  if(!isLoading && !userMetadata) return <Loader />
+
   return (
     <div className={styles.container}>
       <Head>

@@ -1,23 +1,27 @@
+import Loader from "components/loader"
 import Navbar from "components/navbar"
-import { useRouteChange } from "hooks/use-route-change"
-import magic from "lib/magic.lib"
-import { RPCError, RPCErrorCode } from "magic-sdk"
+import useMagicUserMetadata from "hooks/use-magic-user"
+import { Magic, RPCError, RPCErrorCode } from "magic-sdk"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import styles from "styles/login.module.scss"
 
 export default function Login() {
+  const { userMetadata, isLoading } = useMagicUserMetadata({
+    redirectTo: "/",
+    redirectIfFound: true,
+  })
   const [email, setEmail] = useState("")
-  const [validationMessage, setValidationMessage] = useState("")
   const [loading, setLoading] = useState(false)
-  const { isRouteChanged, router } = useRouteChange()
+  const router = useRouter()
 
-  useEffect(() => {
+  const validationMessage = useMemo(() => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
     if (email && !emailRegex.test(email))
-      return setValidationMessage("Please enter a valid email address")
+      return "Please enter a valid email address"
 
-    setValidationMessage("")
+    return ""
   }, [email])
 
   const handleEmailChange = useCallback(
@@ -36,16 +40,32 @@ export default function Login() {
     async (e: React.MouseEvent) => {
       e.preventDefault()
 
-      if (buttonIsDisabled || !magic) return
+      if (buttonIsDisabled) return
+
+      const body = { email }
 
       try {
         setLoading(true)
-        await magic.auth.loginWithMagicLink({ email })
+        const magic = new Magic(
+          process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_API_KEY as string
+        )
+        const didToken = await magic.auth.loginWithMagicLink(body)
+
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${didToken}`,
+          },
+          body: JSON.stringify(body),
+        })
+
+        if (!res.ok) throw new Error(await res.text())
 
         // Head to home
         router.push("/")
       } catch (error) {
-        console.log({ error })
+        console.error({ error })
         if (error instanceof RPCError) {
           switch (error.code) {
             case RPCErrorCode.MagicLinkFailedVerification:
@@ -57,11 +77,13 @@ export default function Login() {
           }
         }
       } finally {
-        if (isRouteChanged) setLoading(false)
+        setLoading(false)
       }
     },
-    [buttonIsDisabled, email, isRouteChanged, router]
+    [buttonIsDisabled, email, router]
   )
+
+  if (!isLoading && userMetadata) return <Loader />
 
   return (
     <div className={styles.container}>

@@ -1,9 +1,3 @@
-import { Magic } from "magic-sdk"
+const { Magic } = require('@magic-sdk/admin')
 
-const createMagic = () =>
-  typeof window !== "undefined" &&
-  new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_API_KEY as string)
-
-const magic = createMagic()
-
-export default magic
+export const magic = new Magic(process.env.MAGIC_SECRET_API_KEY)

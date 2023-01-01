@@ -1,22 +1,18 @@
 import Image from "next/image"
-import { useCallback } from "react"
-import styles from "../styles/banner.module.scss"
+import styles from "styles/banner.module.scss"
 
 type BannerProps = {
   title: string
   subTitle: string
   imgUrl: string
 }
+const handleOnPlay = () => console.log("play")
 
 export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
-  const handleOnPlay = useCallback(() => {
-    console.log("play")
-  }, [])
-
   return (
-    <div className={styles["container"]}>
+    <div className={styles.container}>
       <div className={styles["left-wrapper"]}>
-        <div className={styles["left"]}>
+        <div className={styles.left}>
           <div className={styles["series-wrapper"]}>
             <p className={styles["first-letter"]}>N</p>
             <p className={styles.series}>S E R I E S</p>

@@ -65,6 +65,10 @@ button {
   border: 0px;
   outline: 0px;
   color: var(--white10);
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
 }
 
 :root {
