@@ -1,6 +1,4 @@
-.modal {
-  margin: 75px auto 40px; /** centers modal **/
-
+.container {
   width: 768px;
   background-color: var(--black40);
 
@@ -15,9 +13,15 @@
   }
 }
 
-.overlay {
-  top: 0;
-  left: 0;
+.containerFull {
+  composes: container;
+  // margin: 75px auto 40px; /** centers modal **/
+  width: unset;
+  background-color: unset;
+  border-radius: unset;
+  border: unset;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
 }
 
 /** gives box shadow to the video frame **/
@@ -38,6 +42,11 @@
   composes: borderBoxShadow;
 }
 
+.videoPlayerFull {
+  composes: videoPlayer;
+  border-radius: 0;
+}
+
 /** Modal body **/
 .modalBody {
   padding: 0 3rem;
@@ -47,12 +56,17 @@
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   column-gap: 2em;
-  padding: 1em 0;
+  padding: 1em 0 0.5em;
+}
+
+.modalBodyContentFull {
+  composes: modalBodyContent;
+  column-gap: 10em;
 }
 
 .col1 {
-  max-height: 40vh /* 208px */;
   overflow-y: scroll;
+  // height: calc(100vh - 500px);
 }
 
 .publishTime {

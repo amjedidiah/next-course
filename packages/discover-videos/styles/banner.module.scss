@@ -1,23 +1,25 @@
 .container {
   width: 100%;
-  height: 80vh;
+  height: 60vh;
+  min-height: 500px;
   position: relative;
 
   .left-wrapper {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .left {
       display: flex;
       justify-content: flex-start;
       padding-left: 4rem /* 64px */;
       padding-right: 4rem /* 64px */;
-      height: 100%;
 
       flex-direction: column;
-      margin-top: 6rem /* 96px */;
 
       @media (min-width: 768px) {
         & {

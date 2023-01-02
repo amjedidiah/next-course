@@ -1,9 +1,11 @@
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export const useRouteChange = () => {
   const router = useRouter()
   const [isRouteChanging, setIsRouteChanging] = useState(false)
+
+  const goBack = useCallback(() => router.back(), [router])
 
   useEffect(() => {
     router.events.on("routeChangeStart", () => setIsRouteChanging(true))
@@ -17,5 +19,5 @@ export const useRouteChange = () => {
     }
   }, [router.events])
 
-  return { isRouteChanging }
+  return { isRouteChanging, goBack }
 }

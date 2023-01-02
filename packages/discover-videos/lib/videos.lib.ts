@@ -46,7 +46,7 @@ const fetchVideos = async (search?: string) => {
     : `/search?part=snippet&q=${search}&type=video`
   // Fetch from YouTube API
   const data: VideoData = await fetch(
-    `https://youtube.googleapis.com/youtube/v3${URI}&key=${process.env.YOUTUBE_API_KEY}&maxResults=25`
+    `https://youtube.googleapis.com/youtube/v3${URI}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&maxResults=25`
   ).then((res) => res.json())
 
   return data
@@ -54,7 +54,10 @@ const fetchVideos = async (search?: string) => {
 
 export async function getVideos(search?: string) {
   try {
-    const videoData = process.env.NODE_ENV === "development" ? videoTestData : await fetchVideos(search)
+    const videoData =
+      process.env.NODE_ENV === "development"
+        ? videoTestData
+        : await fetchVideos(search)
 
     if (videoData?.error) throw new Error(videoData.error.message)
 
@@ -89,8 +92,9 @@ const formatPublishTime = (time: string) => {
   const diffMinutes = Math.floor(diff / (1000 * 60))
   const diffSeconds = Math.floor(diff / 1000)
 
-  if(diffYears > 0) return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`
-  if (diffMonths > 0) return `${diffMonths} month${diffMonths > 1 ? "s" : ""} ago`
+  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`
+  if (diffMonths > 0)
+    return `${diffMonths} month${diffMonths > 1 ? "s" : ""} ago`
   if (diffWeeks > 0) return `${diffWeeks} week${diffWeeks > 1 ? "s" : ""} ago`
   if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`
   if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`
@@ -104,7 +108,7 @@ const formatPublishTime = (time: string) => {
 export async function getVideo(id: string) {
   try {
     const videoData = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${id}&key=${process.env.YOUTUBE_API_KEY}`
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
     ).then((res) => res.json())
 
     if (videoData?.error) throw new Error(videoData.error.message)

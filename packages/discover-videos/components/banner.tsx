@@ -1,6 +1,5 @@
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { useCallback } from "react"
+import Link from "next/link"
 import styles from "styles/banner.module.scss"
 
 type BannerProps = {
@@ -16,12 +15,6 @@ export default function Banner({
   imgUrl,
   videoId,
 }: BannerProps) {
-  const router = useRouter()
-  const handleOnPlay = useCallback(
-    () => router.push(`/video/${videoId}`),
-    [router, videoId]
-  )
-
   return (
     <div className={styles.container}>
       <div className={styles["left-wrapper"]}>
@@ -33,15 +26,17 @@ export default function Banner({
           <h3 className={styles.title}>{title}</h3>
           <h4 className={styles["sub-title"]}>{subTitle}</h4>
           <div className={styles["play-button-wrapper"]}>
-            <button className={styles["play-button"]} onClick={handleOnPlay}>
-              <Image
-                src="/static/play_arrow.svg"
-                alt="play icon"
-                width={32}
-                height={32}
-              />
-              <span className={styles["play-text"]}>Play</span>
-            </button>
+            <Link href={`/?video=${videoId}`} as={`/${videoId}`}>
+              <button className={styles["play-button"]}>
+                <Image
+                  src="/static/play_arrow.svg"
+                  alt="play icon"
+                  width={32}
+                  height={32}
+                />
+                <span className={styles["play-text"]}>Play</span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
