@@ -1,6 +1,7 @@
 import styles from "styles/section.module.scss"
 import Card from "components/card"
 import { Video } from "lib/videos.lib"
+import Link from "next/link"
 
 type SectionProps = {
   title: string
@@ -15,12 +16,9 @@ export default function Section({ title, videos, size }: SectionProps) {
       {videos && (
         <div className={styles.content}>
           {videos.map((video, idx) => (
-            <Card
-              key={`${video?.title}-${idx}`}
-              count={idx}
-              size={size}
-              {...video}
-            />
+            <Link href={`/video/${video?.id}`} key={video?.id}>
+              <Card count={idx} size={size} {...video} />
+            </Link>
           ))}
         </div>
       )}

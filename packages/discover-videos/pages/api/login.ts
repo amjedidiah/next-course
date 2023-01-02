@@ -9,8 +9,7 @@ declare global {
 }
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
-  if(req.method !== "POST")
-    return res.status(405).end()
+  if (req.method !== "POST") return res.status(405).end()
 
   try {
     const didToken = req.headers.authorization?.slice(7)
@@ -21,7 +20,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
     res.status(200).send({ done: true })
   } catch (error) {
-    console.error({error})
+    console.error({ error })
     if (error instanceof Error)
       res.status(error.status || 500).end(error.message)
   }

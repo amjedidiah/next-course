@@ -62,6 +62,11 @@
 
 - Build time generation can take a lot of time with a lot of pages or should a page get stale, the build process has to repeat all over again.
 - Implement this in Next with `getStaticProps` with `revalidate`
+- When `fallback` is set to `true`, Next.js will generate the requested page on the fly and cache it for future requests. This is useful for pages that don't get much traffic, but still need to be pre-rendered.
+When `fallback` is set to `false`, Next.js will return a 404 page if the requested page is not pre-rendered.
+When `fallback` is set to `blocking`, Next.js will wait for the page to be generated before returning the response. This is useful for pages that get a lot of traffic and need to be pre-rendered.
+
+> The difference b/w `fallback: true` and `fallback: blocking` is that `fallback: true` will return the page immediately, but with empty props. `fallback: blocking` will wait for the page to be generated before returning the response. In `fallback: blocking`, the page will be generated without a loading state.
 
 ### Performance
 

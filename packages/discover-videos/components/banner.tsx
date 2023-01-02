@@ -1,14 +1,27 @@
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { useCallback } from "react"
 import styles from "styles/banner.module.scss"
 
 type BannerProps = {
   title: string
   subTitle: string
   imgUrl: string
+  videoId: string
 }
-const handleOnPlay = () => console.log("play")
 
-export default function Banner({ title, subTitle, imgUrl }: BannerProps) {
+export default function Banner({
+  title,
+  subTitle,
+  imgUrl,
+  videoId,
+}: BannerProps) {
+  const router = useRouter()
+  const handleOnPlay = useCallback(
+    () => router.push(`/video/${videoId}`),
+    [router, videoId]
+  )
+
   return (
     <div className={styles.container}>
       <div className={styles["left-wrapper"]}>

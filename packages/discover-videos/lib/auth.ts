@@ -24,18 +24,20 @@ export const setLoginSession = async (
     // Set the cookie
     setTokenCookie(res, token)
   } catch (error) {
-    console.error({error})
+    console.error({ error })
   }
 }
 
-export const getLoginSession = async (
-  req: NextApiRequest
-) => {
+export const getLoginSession = async (req: NextApiRequest) => {
   try {
     const token = getTokenCookie(req)
     if (!token) return
 
-    const session: Session = await Iron.unseal(token, TOKEN_SECRET, Iron.defaults)
+    const session: Session = await Iron.unseal(
+      token,
+      TOKEN_SECRET,
+      Iron.defaults
+    )
     const expiresAt = session.createdAt + session.maxAge * 1000
 
     // Validate the expiration date of the session
@@ -43,7 +45,7 @@ export const getLoginSession = async (
 
     return session
   } catch (error) {
-    console.error({error})
+    console.error({ error })
     return null
   }
 }

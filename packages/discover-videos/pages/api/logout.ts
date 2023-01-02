@@ -7,8 +7,7 @@ export default async function logout(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if(req.method !== "GET")
-    return res.status(405).end()
+  if (req.method !== "GET") return res.status(405).end()
 
   try {
     const session = await getLoginSession(req)
@@ -17,7 +16,7 @@ export default async function logout(
     await magic.users.logoutByIssuer(session.issuer)
     removeTokenCookie(res)
   } catch (error) {
-    console.error({error})
+    console.error({ error })
   } finally {
     res.writeHead(302, { Location: "/" })
     res.end()

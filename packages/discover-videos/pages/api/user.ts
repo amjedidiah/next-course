@@ -2,8 +2,7 @@ import { getLoginSession } from "lib/auth"
 import { NextApiRequest, NextApiResponse } from "next"
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
-  if(req.method !== "GET")
-    return res.status(405).end()
+  if (req.method !== "GET") return res.status(405).end()
 
   const session = await getLoginSession(req)
   // After getting the session you may want to fetch for the user instead

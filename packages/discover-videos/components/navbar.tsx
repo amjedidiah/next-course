@@ -10,7 +10,7 @@ type NavbarProps = {
 
 export default function Navbar({ minimal }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const {userMetadata} = useMagicUserMetadata()
+  const { userMetadata } = useMagicUserMetadata()
 
   const toggleDropdown = useCallback(
     () => setIsDropdownOpen(!isDropdownOpen),

@@ -17,7 +17,7 @@ export default function useMagicUserMetadata({
   redirectTo,
   redirectIfFound,
 }: MetadataParams = {}) {
-  const {data, error} = useSWR("/api/user", fetcher)
+  const { data, error } = useSWR("/api/user", fetcher)
   const user: MagicUserMetadata = data?.user
   const finished = Boolean(data)
   const hasUser = Boolean(user)
@@ -34,5 +34,5 @@ export default function useMagicUserMetadata({
       router.push(redirectTo)
   }, [redirectTo, redirectIfFound, finished, hasUser])
 
-  return {userMetadata: error ? null : user, isLoading: !finished }
+  return { userMetadata: error ? null : user, isLoading: !finished }
 }

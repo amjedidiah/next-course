@@ -3,11 +3,13 @@
     "airtable",
     "Airtable",
     "Ccontent",
+    "centers",
     "Cstatistics",
     "darkhorse",
     "esnext",
     "fldf",
     "fldshkfdsh",
+    "Fpri",
     "neighborhood",
     "prelint",
     "Roboto",
@@ -15,6 +17,7 @@
     "Serverside",
     "unsplash",
     "webp",
+    "ytplayer",
     "Zzzi"
   ],
   "eslint.workingDirectories": [
