@@ -33,7 +33,9 @@ const Card = ({ imgUrl, size = "md", count, title }: CardProps) => {
           src={stateImgUrl}
           alt={title}
           className={styles["card-img"]}
-          sizes="100%"
+          sizes="(max-width: 576px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
           onError={handleError}
           fill
         />

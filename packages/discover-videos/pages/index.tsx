@@ -17,10 +17,10 @@ import modalStyles from "styles/modal.module.scss"
 ReactModal.setAppElement("#__next")
 
 export const getServerSideProps: GetServerSideProps<{
-  marvelVideos: VideoType[] | null
-  travelVideos: VideoType[] | null
-  productivityVideos: VideoType[] | null
-  popularVideos: VideoType[] | null
+  marvelVideos: VideoType[]
+  travelVideos: VideoType[]
+  productivityVideos: VideoType[]
+  popularVideos: VideoType[]
 }> = async () => {
   const marvelVideos = await getVideos("marvel trailer")
   const travelVideos = await getVideos("travel")
@@ -41,7 +41,8 @@ export default function Home(
   const fallbackId = useRouter().query.video as string
   const { goBack } = useRouteChange()
 
-  if (!(isLoading || userMetadata)) return <Loader />
+  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+  if (!isLoading && !userMetadata) return <Loader />
 
   return (
     <div className={styles.container}>
@@ -61,12 +62,7 @@ export default function Home(
 
       <div className={styles.main}>
         <Navbar />
-        <Banner
-          title="Clifford the red dog"
-          subTitle="a very cute dog"
-          imgUrl="/static/clifford.webp"
-          videoId="iBMPbrja1tM"
-        />
+        <Banner />
 
         <Section title="Marvel" videos={props.marvelVideos} size="lg" />
         <Section title="Travel" videos={props.travelVideos} size="md" />

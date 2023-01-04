@@ -4,6 +4,7 @@ export interface Video {
   id: string
   title: string
   imgUrl: string
+  subTitle?: string
 }
 
 export interface VideoFull extends Video {
@@ -52,27 +53,6 @@ const fetchVideos = async (search?: string) => {
   return data
 }
 
-export async function getVideos(search?: string) {
-  try {
-    const videoData =
-      process.env.NODE_ENV === "development"
-        ? videoTestData
-        : await fetchVideos(search)
-
-    if (videoData?.error) throw new Error(videoData.error.message)
-
-    // Return the formatted video data
-    return videoData.items.map((video) => ({
-      id: video?.id?.videoId || video?.id,
-      title: video?.snippet?.title,
-      imgUrl: video?.snippet?.thumbnails?.high?.url,
-    })) as Video[]
-  } catch (error) {
-    console.error({ error })
-    return []
-  }
-}
-
 const formatCount = (count: string) => {
   const num = Number(count)
   if (num > 1000000) return `${(num / 1000000).toFixed(1)}M`
@@ -105,6 +85,33 @@ const formatPublishTime = (time: string) => {
   return "Just now"
 }
 
+const formatVideo = (video: VideoDataItem): Video => ({
+  id: video?.id?.videoId,
+  title: video?.snippet?.title,
+  imgUrl: video?.snippet?.thumbnails?.high?.url,
+  subTitle: video?.snippet?.channelTitle
+})
+
+const getVideoData = async () =>
+  process.env.NODE_ENV === "development" ? videoTestData : await fetchVideos()
+
+export async function getVideos(search?: string) {
+  try {
+    const videoData =
+      process.env.NODE_ENV === "development"
+        ? videoTestData
+        : await fetchVideos(search)
+
+    if (videoData?.error) throw new Error(videoData.error.message)
+
+    // Return the formatted video data
+    return videoData.items.map((video) => formatVideo(video as VideoDataItem))
+  } catch (error) {
+    console.error({ error })
+    return []
+  }
+}
+
 export async function getVideo(id: string) {
   try {
     const videoData = await fetch(
@@ -128,4 +135,17 @@ export async function getVideo(id: string) {
     console.error({ error })
     return null
   }
+}
+
+export const getBannerVideo = async () => {
+  const randomNum = Math.floor(Math.random() * 25)
+  const videoData = await getVideoData()
+  const randomVideo = videoData.items[randomNum]
+
+  return formatVideo(randomVideo as VideoDataItem)
+}
+
+export const getStaticVideoIds = async () => {
+  const videoData = await getVideoData()
+  return videoData.items.slice(0, 3).map((video) => video?.id?.videoId)
 }

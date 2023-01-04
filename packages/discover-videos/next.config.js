@@ -2,7 +2,7 @@
 
 const ContentSecurityPolicy = `
   font-src 'self';  
-  frame-src 'self' https://www.youtube.com https://auth.magic.link https://static.doubleclick.net https://www.youtube.com https://play.google.com http://0.0.0.0:3000 data:text/plain;base64,Cg==;
+  frame-src 'self' https://www.youtube.com https://auth.magic.link https://static.doubleclick.net https://www.youtube.com https://play.google.com http://0.0.0.0:3000;
 `
 
 const nextConfig = {

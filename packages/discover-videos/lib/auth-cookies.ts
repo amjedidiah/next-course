@@ -3,16 +3,16 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 const TOKEN_NAME = "discover-videos-magic-token"
 
-export const MAX_AGE = 60 * 60 * 8 // 8 hours
+export const MAX_AGE = 60 * 60 * 24 // 24 hours
 
 export const setTokenCookie = (res: NextApiResponse, token: string) => {
   const cookie = serialize(TOKEN_NAME, token, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
-    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
     sameSite: "lax",
+    httpOnly: true,
   })
 
   res.setHeader("Set-Cookie", cookie)

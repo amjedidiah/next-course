@@ -7,6 +7,8 @@ import { useRouter } from "next/router"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import styles from "styles/login.module.scss"
 
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
 export default function Login() {
   const { userMetadata, isLoading } = useMagicUserMetadata({
     redirectTo: "/",
@@ -14,14 +16,14 @@ export default function Login() {
   })
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
+  const [validationMessage, setValidationMessage] = useState("")
   const router = useRouter()
 
-  const validationMessage = useMemo(() => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+  useEffect(() => {
     if (email && !emailRegex.test(email))
-      return "Please enter a valid email address"
+      setValidationMessage("Please enter a valid email address")
 
-    return ""
+    setValidationMessage("")
   }, [email])
 
   const handleEmailChange = useCallback(
@@ -42,14 +44,12 @@ export default function Login() {
 
       if (buttonIsDisabled) return
 
-      const body = { email }
-
       try {
         setLoading(true)
         const magic = new Magic(
           process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_API_KEY as string
         )
-        const didToken = await magic.auth.loginWithMagicLink(body)
+        const didToken = await magic.auth.loginWithMagicLink({ email })
 
         const res = await fetch("/api/login", {
           method: "POST",
@@ -57,25 +57,26 @@ export default function Login() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${didToken}`,
           },
-          body: JSON.stringify(body),
         })
+
+        console.log(res.ok)
 
         if (!res.ok) throw new Error(await res.text())
 
         // Head to home
-        router.push("/")
+        router.reload()
       } catch (error) {
         console.error({ error })
-        if (error instanceof RPCError) {
+        if (error instanceof RPCError)
           switch (error.code) {
             case RPCErrorCode.MagicLinkFailedVerification:
             case RPCErrorCode.MagicLinkExpired:
             case RPCErrorCode.MagicLinkRateLimited:
             case RPCErrorCode.UserAlreadyLoggedIn:
-              // Handle errors accordingly :)
-              break
+              return setValidationMessage(error.message)
           }
-        }
+
+        setValidationMessage("Something went wrong. Please try again.")
       } finally {
         setLoading(false)
       }

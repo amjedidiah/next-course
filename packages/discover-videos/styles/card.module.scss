@@ -1,7 +1,7 @@
 .card {
   margin-right: 0.25rem /* 4px */;
   cursor: pointer;
-
+  
   .img-holder {
     position: relative;
     display: inline-block;
@@ -28,11 +28,6 @@
     }
 
     .card-img {
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-
       border-radius: 0.375rem /* 6px */;
       object-fit: cover;
       object-position: center;

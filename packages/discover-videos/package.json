@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hapi/iron": "^7.0.0",
     "@magic-sdk/admin": "^1.8.0",
     "@next/font": "^13.0.6",
     "@types/node": "18.11.13",
@@ -21,6 +20,7 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "framer-motion": "^7.10.2",
+    "jsonwebtoken": "^9.0.0",
     "magic-sdk": "^11.0.0",
     "next": "13.0.6",
     "react": "18.2.0",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
+    "@types/jsonwebtoken": "^9.0.0",
     "@types/react-modal": "^3.13.1"
   }
 }

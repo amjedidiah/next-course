@@ -18,7 +18,6 @@ export default function Video(props: VideoProps) {
       if (!props.fallbackId) return
 
       const data = await getVideo(props.fallbackId)
-      console.log({ data })
       setVideo(data)
     }
 
@@ -30,18 +29,22 @@ export default function Video(props: VideoProps) {
   const { title, description, publishTime, channelTitle, viewCount, id } = video
 
   return (
-    <div className={isHome ? styles.container : styles.containerFull}>
+    <div className={styles[isHome ? "container" : "containerFull"]}>
       <iframe
         id="ytplayer"
         typeof="text/html"
-        className={isHome ? styles.videoPlayer : styles.videoPlayerFull}
+        className={styles[isHome ? "videoPlayer" : "videoPlayerFull"]}
         width="100%"
         height="360"
         src={`https://www.youtube.com/embed/${id}?autoplay=0&origin=http://example.com&controls=0&rel=1`}
         frameBorder="0"
       />
       <div className={styles.modalBody}>
-        <div className={isHome ? styles.modalBodyContent : styles.modalBodyContentFull}>
+        <div
+          className={
+            styles[isHome ? "modalBodyContent" : "modalBodyContentFull"]
+          }
+        >
           <div className={isHome ? styles.col1 : ""}>
             <p className={styles.publishTime}>{publishTime}</p>
             <p className={styles.title}>{title}</p>

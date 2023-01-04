@@ -16,7 +16,11 @@ export default function Section({ title, videos, size }: SectionProps) {
       {videos && (
         <div className={styles.content}>
           {videos.map((video, idx) => (
-            <Link href={`/?video=${video.id}`} as={`/${video.id}`} key={video.id}>
+            <Link
+              href={`/?video=${video.id}`}
+              as={`/${video.id}`}
+              key={video.id}
+            >
               <Card count={idx} size={size} {...video} />
             </Link>
           ))}

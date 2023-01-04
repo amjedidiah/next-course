@@ -1,20 +1,25 @@
+import { getBannerVideo, Video } from "lib/videos.lib"
 import Image from "next/image"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import styles from "styles/banner.module.scss"
 
-type BannerProps = {
-  title: string
-  subTitle: string
-  imgUrl: string
-  videoId: string
-}
+export default function Banner() {
+  const [bannerVideo, setBannerVideo] = useState<Video | null>(null)
 
-export default function Banner({
-  title,
-  subTitle,
-  imgUrl,
-  videoId,
-}: BannerProps) {
+  useEffect(() => {
+    const fetchBannerVideo = async () => {
+      const video = await getBannerVideo()
+      setBannerVideo(video)
+    }
+
+    fetchBannerVideo()
+  }, [])
+
+  if (!bannerVideo) return null
+
+  const { title, subTitle, imgUrl, id } = bannerVideo
+
   return (
     <div className={styles.container}>
       <div className={styles["left-wrapper"]}>
@@ -26,7 +31,7 @@ export default function Banner({
           <h3 className={styles.title}>{title}</h3>
           <h4 className={styles["sub-title"]}>{subTitle}</h4>
           <div className={styles["play-button-wrapper"]}>
-            <Link href={`/?video=${videoId}`} as={`/${videoId}`}>
+            <Link href={`/?video=${id}`} as={`/${id}`}>
               <button className={styles["play-button"]}>
                 <Image
                   src="/static/play_arrow.svg"

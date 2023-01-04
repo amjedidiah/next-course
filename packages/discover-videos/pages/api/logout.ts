@@ -13,7 +13,7 @@ export default async function logout(
     const session = await getLoginSession(req)
     if (!session) throw new Error("Not authenticated")
 
-    await magic.users.logoutByIssuer(session.issuer)
+    await magic.users.logoutByIssuer(session?.["https://hasura.io/jwt/claims"]?.["x-hasura-user-id"] as string)
     removeTokenCookie(res)
   } catch (error) {
     console.error({ error })

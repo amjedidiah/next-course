@@ -1,7 +1,7 @@
 import useSWR from "swr"
-import { MagicUserMetadata } from "magic-sdk"
 import { useEffect } from "react"
 import router from "next/router"
+import { HasuraUser } from "lib/hasura.lib"
 
 type MetadataParams = {
   redirectTo?: string
@@ -17,14 +17,12 @@ export default function useMagicUserMetadata({
   redirectTo,
   redirectIfFound,
 }: MetadataParams = {}) {
-  const { data, error } = useSWR("/api/user", fetcher)
-  const user: MagicUserMetadata = data?.user
-  const finished = Boolean(data)
+  const { data, isLoading } = useSWR<{user: HasuraUser}>("/api/user", fetcher)
+  const user = data?.user
   const hasUser = Boolean(user)
 
   useEffect(() => {
-    // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-    if (!redirectTo || !finished) return
+    if (!redirectTo || isLoading) return
     if (
       // If redirectTo is set, redirect if the user was not found.
       (redirectTo && !redirectIfFound && !hasUser) ||
@@ -32,7 +30,7 @@ export default function useMagicUserMetadata({
       (redirectIfFound && hasUser)
     )
       router.push(redirectTo)
-  }, [redirectTo, redirectIfFound, finished, hasUser])
+  }, [redirectTo, redirectIfFound, hasUser, isLoading])
 
-  return { userMetadata: error ? null : user, isLoading: !finished }
+  return { userMetadata: user, isLoading }
 }
