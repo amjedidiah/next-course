@@ -7,6 +7,14 @@ export type HasuraUser = {
   publicAddress: string
 }
 
+export type HasuraVideoStat = {
+  id: string
+  user_id: string
+  video_id: string
+  favourited: 0 | 1 | null
+  watched: boolean
+}
+
 type GraphQLResponse<T> = {
   data: T
   errors: {
@@ -78,6 +86,87 @@ export const insertUser = (
       email,
       issuer,
       publicAddress,
+    },
+    token,
+  })
+
+export const getVideoStat = (
+  { user_id, video_id }: Pick<HasuraVideoStat, "user_id" | "video_id">,
+  token: string
+) =>
+  queryHasuraGraphQL<{ stats: HasuraVideoStat[] }>({
+    operationsDoc: `
+      query MyQuery($user_id: String!, $video_id: String!) {
+        stats(where: {user_id: {_eq: $user_id}, video_id: {_eq: $video_id}}) {
+          favourited
+          id
+          user_id
+          video_id
+          watched
+        }
+    }`,
+    operationName: "MyQuery",
+    variables: {
+      user_id,
+      video_id,
+    },
+    token,
+  })
+
+export const insertVideoStat = (
+  {
+    favourited,
+    user_id,
+    video_id,
+  }: Pick<HasuraVideoStat, "favourited" | "user_id" | "video_id">,
+  token: string
+) =>
+  queryHasuraGraphQL<{ insert_stats: { returning: HasuraVideoStat[] } }>({
+    operationsDoc: `mutation MyMutation($favourited: Int!, $user_id: String!, $video_id: String!) {
+        insert_stats(objects: {favourited: $favourited, user_id: $user_id, video_id: $video_id}) {
+          returning {
+            favourited
+            id
+            user_id
+            video_id
+            watched
+          }
+        }
+      }`,
+    operationName: "MyMutation",
+    variables: {
+      favourited,
+      user_id,
+      video_id,
+    },
+    token,
+  })
+
+export const updateVideoStat = (
+  {
+    user_id,
+    video_id,
+    favourited,
+  }: Pick<HasuraVideoStat, "user_id" | "video_id" | "favourited">,
+  token: string
+) =>
+  queryHasuraGraphQL<{ update_stats: { returning: HasuraVideoStat[] } }>({
+    operationsDoc: `mutation MyMutation($user_id: String!, $video_id: String!, $favourited: Int!) {
+      update_stats(where: {user_id: {_eq: $user_id}, video_id: {_eq: $video_id}}, _set: {favourited: $favourited}) {
+        returning {
+          favourited
+          id
+          user_id
+          video_id
+          watched
+        }
+      }
+    }`,
+    operationName: "MyMutation",
+    variables: {
+      favourited,
+      user_id,
+      video_id,
     },
     token,
   })

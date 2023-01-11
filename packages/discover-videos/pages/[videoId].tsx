@@ -46,7 +46,7 @@ export default function VideoId({
   })
 
   // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-  if (!isLoading || !userMetadata) return <Loader />
+  if (!isLoading && !userMetadata) return <Loader />
 
   if (!video) return null
 

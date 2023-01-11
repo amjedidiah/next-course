@@ -59,8 +59,6 @@ export default function Login() {
           },
         })
 
-        console.log(res.ok)
-
         if (!res.ok) throw new Error(await res.text())
 
         // Head to home

@@ -17,7 +17,7 @@ export default function useMagicUserMetadata({
   redirectTo,
   redirectIfFound,
 }: MetadataParams = {}) {
-  const { data, isLoading } = useSWR<{user: HasuraUser}>("/api/user", fetcher)
+  const { data, isLoading } = useSWR<{ user: HasuraUser }>("/api/user", fetcher)
   const user = data?.user
   const hasUser = Boolean(user)
 

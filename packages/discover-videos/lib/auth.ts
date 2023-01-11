@@ -21,11 +21,13 @@ export const getLoginSession = async (req: NextApiRequest) => {
     if (!token) return null
 
     const session = (await jwt.verify(token, TOKEN_SECRET)) as SessionPayload
-    
+
     // Validate the expiration date of the session
     if (Date.now() / 1000 > session.exp) throw new Error("Session expired")
 
-    return session
+    const data = {...session, token}
+
+    return data
   } catch (error) {
     console.error({ error })
     return null

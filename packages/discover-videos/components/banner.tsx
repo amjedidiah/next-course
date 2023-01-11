@@ -1,25 +1,9 @@
-import { getBannerVideo, Video } from "lib/videos.lib"
+import { Video } from "lib/videos.lib"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 import styles from "styles/banner.module.scss"
 
-export default function Banner() {
-  const [bannerVideo, setBannerVideo] = useState<Video | null>(null)
-
-  useEffect(() => {
-    const fetchBannerVideo = async () => {
-      const video = await getBannerVideo()
-      setBannerVideo(video)
-    }
-
-    fetchBannerVideo()
-  }, [])
-
-  if (!bannerVideo) return null
-
-  const { title, subTitle, imgUrl, id } = bannerVideo
-
+export default function Banner({ id, title, subTitle, imgUrl }: Video) {
   return (
     <div className={styles.container}>
       <div className={styles["left-wrapper"]}>

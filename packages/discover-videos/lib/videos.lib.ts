@@ -1,4 +1,5 @@
 import videoTestData from "data/videos.json"
+import { HasuraVideoStat } from "./hasura.lib"
 
 export interface Video {
   id: string
@@ -89,7 +90,7 @@ const formatVideo = (video: VideoDataItem): Video => ({
   id: video?.id?.videoId,
   title: video?.snippet?.title,
   imgUrl: video?.snippet?.thumbnails?.high?.url,
-  subTitle: video?.snippet?.channelTitle
+  subTitle: video?.snippet?.channelTitle,
 })
 
 const getVideoData = async () =>
@@ -113,6 +114,7 @@ export async function getVideos(search?: string) {
 }
 
 export async function getVideo(id: string) {
+  if(!id) return null
   try {
     const videoData = await fetch(
       `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
@@ -121,6 +123,8 @@ export async function getVideo(id: string) {
     if (videoData?.error) throw new Error(videoData.error.message)
 
     const video: VideoDataItem = videoData.items[0]
+
+    if(!video) return null
 
     return {
       id: video.id?.videoId || video.id,
@@ -148,4 +152,20 @@ export const getBannerVideo = async () => {
 export const getStaticVideoIds = async () => {
   const videoData = await getVideoData()
   return videoData.items.slice(0, 3).map((video) => video?.id?.videoId)
+}
+
+export const getVideoStat = async (id: string) => {
+  if(!id) return null
+
+  try {
+    const {videoStat} = await fetch(`api/stats?video_id=${id}`).then((res) =>
+      res.json()
+    ) as {videoStat: HasuraVideoStat}
+
+    return videoStat?.favourited
+
+  } catch (error) {
+    console.error({ error })
+    return undefined
+  }
 }
