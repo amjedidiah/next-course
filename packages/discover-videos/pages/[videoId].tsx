@@ -1,5 +1,3 @@
-import Loader from "components/loader"
-import useMagicUserMetadata from "hooks/use-magic-user"
 import { getStaticVideoIds, getVideo, VideoFull } from "lib/videos.lib"
 import {
   GetStaticPaths,
@@ -11,7 +9,7 @@ import Navbar from "components/navbar"
 import Video from "components/video"
 
 export const getStaticProps: GetStaticProps<{
-  video: VideoFull | null
+  video?: VideoFull
 }> = async ({ params }: GetStaticPropsContext) => {
   const video = await getVideo(params?.videoId as string)
 
@@ -28,9 +26,12 @@ export const getStaticProps: GetStaticProps<{
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const videoIds = await getStaticVideoIds()
-  const paths = videoIds.map((videoId) => ({
-    params: { videoId },
-  }))
+
+  const paths = videoIds
+    ? videoIds.map((videoId) => ({
+        params: { videoId },
+      }))
+    : []
 
   return {
     paths,
@@ -41,15 +42,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export default function VideoId({
   video,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { userMetadata, isLoading } = useMagicUserMetadata({
-    redirectTo: "/login",
-  })
-
-  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-  if (!isLoading && !userMetadata) return <Loader />
-
   if (!video) return null
-
   return (
     <>
       <Navbar />

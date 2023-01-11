@@ -5,23 +5,21 @@ import styles from "styles/home.module.scss"
 import Section from "components/section"
 import { getBannerVideo, getVideos, Video as VideoType } from "lib/videos.lib"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import useMagicUserMetadata from "hooks/use-magic-user"
-import Loader from "components/loader"
 import ReactModal from "react-modal"
-import { useRouteChange } from "hooks/use-route-change"
 import Video from "components/video"
 import { useRouter } from "next/router"
 import modalStyles from "styles/modal.module.scss"
+import { useCallback } from "react"
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 ReactModal.setAppElement("#__next")
 
 export const getServerSideProps: GetServerSideProps<{
-  marvelVideos: VideoType[]
-  travelVideos: VideoType[]
-  productivityVideos: VideoType[]
-  popularVideos: VideoType[]
-  bannerVideo: VideoType
+  marvelVideos?: VideoType[]
+  travelVideos?: VideoType[]
+  productivityVideos?: VideoType[]
+  popularVideos?: VideoType[]
+  bannerVideo?: VideoType
 }> = async () => {
   const marvelVideos = await getVideos("marvel trailer")
   const travelVideos = await getVideos("travel")
@@ -47,15 +45,10 @@ export default function Home({
   popularVideos,
   bannerVideo,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { userMetadata, isLoading } = useMagicUserMetadata({
-    redirectTo: "/login",
-  })
-  const fallbackId = useRouter().query.video as string
-  const { goBack } = useRouteChange()
-
-  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-  if (!isLoading && !userMetadata) return <Loader />
-
+  const router = useRouter();
+  const fallbackId = router.query.video as string
+  const goBack = useCallback(() => router.back(), [router])
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -74,7 +67,7 @@ export default function Home({
 
       <div className={styles.main}>
         <Navbar />
-        <Banner {...bannerVideo} />
+        <Banner video={bannerVideo} />
 
         <Section title="Marvel" videos={marvelVideos} size="lg" />
         <Section title="Travel" videos={travelVideos} size="md" />

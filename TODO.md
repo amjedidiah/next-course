@@ -6,5 +6,9 @@
 
 ## Discover Videos
 
-- [x] Implement `like` and `dislike` functionality with `req.cookies`. Send `403` response if cookie is not set.
-- [ ] Optimize code for `like` and `dislike` functionality
+### Fixes
+
+- [ ] Refactor code in `pages/api`
+- [ ] Video title length in Banner
+- [ ] Update `dev` video data to be Avengers videos
+- [ ] Route loading and video change in `Banner` while using modal navigation

@@ -1,18 +1,19 @@
 import { useCallback } from "react"
 import styles from "styles/icons.module.scss"
-import Dislike from "./dislike-icon"
-import Like from "./like-icon"
+import Dislike from "components/icons/dislike-icon"
+import Like from "components/icons/like-icon"
 
 type IconProps = {
-  liked?: Boolean
-  onSetLiked: (liked: Boolean) => void
+  liked?: boolean
+  onSetLiked: (liked: boolean) => void
 }
 
 export type IconSvgProps = {
-  selected?: Boolean
+  selected?: boolean
 }
 
 export default function Icons({ liked, onSetLiked }: IconProps) {
+  const disliked = liked === false
   const toggleLike = useCallback(() => onSetLiked(true), [onSetLiked])
   const toggleUnlike = useCallback(() => onSetLiked(false), [onSetLiked])
 
@@ -27,7 +28,7 @@ export default function Icons({ liked, onSetLiked }: IconProps) {
       </div>
       <button onClick={toggleUnlike}>
         <div className={styles.btnWrapper}>
-          <Dislike selected={liked === false} />
+          <Dislike selected={disliked} />
         </div>
       </button>
     </div>

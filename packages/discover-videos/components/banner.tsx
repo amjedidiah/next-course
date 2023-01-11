@@ -3,7 +3,14 @@ import Image from "next/image"
 import Link from "next/link"
 import styles from "styles/banner.module.scss"
 
-export default function Banner({ id, title, subTitle, imgUrl }: Video) {
+type BannerProps = {
+  video?: Video
+}
+
+export default function Banner({ video }: BannerProps) {
+  if (!video) return null
+  const { id, title, subTitle, imgUrl } = video
+
   return (
     <div className={styles.container}>
       <div className={styles["left-wrapper"]}>

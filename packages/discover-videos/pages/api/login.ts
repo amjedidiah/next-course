@@ -1,7 +1,7 @@
 import { magic } from "lib/magic.lib"
 import { NextApiRequest, NextApiResponse } from "next"
 import jwt from "jsonwebtoken"
-import { MAX_AGE, setTokenCookie } from "lib/auth-cookies"
+import { MAX_AGE, setTokenCookie } from "lib/auth-cookies.lib"
 import { getUser, insertUser } from "lib/hasura.lib"
 import { MagicUserMetadata } from "@magic-sdk/admin"
 

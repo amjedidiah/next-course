@@ -1,11 +1,19 @@
 import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import useUserMetadata from "./use-user-metadata"
 
-export const useRouteChange = () => {
+const params = {
+  login: { redirectTo: "/", redirectIfFound: true },
+  "not-login": { redirectTo: "/login" },
+}
+
+export default function useRouteChange() {
   const router = useRouter()
+  const isLogin = router.pathname === "/login"
   const [isRouteChanging, setIsRouteChanging] = useState(false)
-
-  const goBack = useCallback(() => router.back(), [router])
+  const { isLoading, userMetadata } = useUserMetadata(
+    isLogin ? params["login"] : params["not-login"]
+  )
 
   useEffect(() => {
     router.events.on("routeChangeStart", () => setIsRouteChanging(true))
@@ -19,5 +27,15 @@ export const useRouteChange = () => {
     }
   }, [router.events])
 
-  return { isRouteChanging, goBack }
+  const showLoader = useMemo(() => {
+    return (
+      isRouteChanging ||
+      isLoading ||
+      (isLogin && !isLoading && userMetadata) ||
+      // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+      (!isLogin && !isLoading && !userMetadata)
+    )
+  }, [isRouteChanging, isLoading, isLogin, userMetadata])
+
+  return { showLoader }
 }

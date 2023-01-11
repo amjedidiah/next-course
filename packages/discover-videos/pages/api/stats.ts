@@ -1,4 +1,4 @@
-import { getLoginSession } from "lib/auth"
+import { getLoginSession } from "lib/auth.lib"
 import {
   getVideoStat,
   HasuraVideoStat,
@@ -23,7 +23,7 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
   const { video_id } = isGet ? req.query : req.body
   if (!video_id) return res.status(400).json({ error: "Missing videoId" })
 
-  const {data} = await getVideoStat({ user_id, video_id }, session.token)
+  const { data } = await getVideoStat({ user_id, video_id }, session.token)
   const videoStat = data?.stats[0]
 
   if (isPatch && !videoStat)
@@ -32,17 +32,21 @@ export default async function stats(req: NextApiRequest, res: NextApiResponse) {
   if (isGet) return res.status(200).json({ videoStat })
 
   const { favourited } = req.body
-  const isFavourited = favourited ? 1 : 0
 
-  let resp;
-  let updatedVideo;
+  let resp
+  let updatedVideo
 
-  if(isPatch) {
-    resp = await updateVideoStat({ favourited: isFavourited, user_id, video_id }, session.token)
+  if (isPatch) {
+    resp = await updateVideoStat(
+      { favourited, user_id, video_id },
+      session.token
+    )
     updatedVideo = resp?.data.update_stats.returning[0]
-  }
-  else {
-    resp = await insertVideoStat({ favourited: isFavourited, user_id, video_id }, session.token)
+  } else {
+    resp = await insertVideoStat(
+      { favourited, user_id, video_id },
+      session.token
+    )
     updatedVideo = resp?.data.insert_stats.returning[0] as HasuraVideoStat
   }
 

@@ -1,4 +1,4 @@
-import { getLoginSession } from "lib/auth"
+import { getLoginSession } from "lib/auth.lib"
 import { getUser } from "lib/hasura.lib"
 import { NextApiRequest, NextApiResponse } from "next"
 
@@ -7,8 +7,7 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
 
   const session = await getLoginSession(req)
 
-  if (!session)
-    return res.status(401).json({ error: "Not authenticated" })
+  if (!session) return res.status(401).json({ error: "Not authenticated" })
 
   const { data } = await getUser(
     session?.["https://hasura.io/jwt/claims"]?.["x-hasura-user-id"] as string,

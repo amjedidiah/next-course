@@ -11,7 +11,7 @@ export type HasuraVideoStat = {
   id: string
   user_id: string
   video_id: string
-  favourited: 0 | 1 | null
+  favourited: "liked" | "disliked" | "none"
   watched: boolean
 }
 
@@ -47,9 +47,9 @@ export default async function queryHasuraGraphQL<T>({
         operationName: operationName,
       }),
     }
-  )
+  ).then((res) => res.json())
 
-  return await result.json()
+  return result
 }
 
 export const getUser = (issuer: string, token: string) =>
@@ -122,7 +122,7 @@ export const insertVideoStat = (
   token: string
 ) =>
   queryHasuraGraphQL<{ insert_stats: { returning: HasuraVideoStat[] } }>({
-    operationsDoc: `mutation MyMutation($favourited: Int!, $user_id: String!, $video_id: String!) {
+    operationsDoc: `mutation MyMutation($favourited: String!, $user_id: String!, $video_id: String!) {
         insert_stats(objects: {favourited: $favourited, user_id: $user_id, video_id: $video_id}) {
           returning {
             favourited
@@ -151,7 +151,7 @@ export const updateVideoStat = (
   token: string
 ) =>
   queryHasuraGraphQL<{ update_stats: { returning: HasuraVideoStat[] } }>({
-    operationsDoc: `mutation MyMutation($user_id: String!, $video_id: String!, $favourited: Int!) {
+    operationsDoc: `mutation MyMutation($user_id: String!, $video_id: String!, $favourited: String!) {
       update_stats(where: {user_id: {_eq: $user_id}, video_id: {_eq: $video_id}}, _set: {favourited: $favourited}) {
         returning {
           favourited

@@ -1,4 +1,4 @@
-import { IconSvgProps } from "./icons"
+import { IconSvgProps } from "components/icons/icons"
 
 export default function Like({ selected = false }: IconSvgProps) {
   return (

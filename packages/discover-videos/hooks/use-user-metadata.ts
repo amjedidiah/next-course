@@ -11,13 +11,13 @@ type MetadataParams = {
 const fetcher = (url: string) =>
   fetch(url)
     .then((r) => r.json())
-    .then((data) => ({ user: data?.user || null }))
+    .then((data) => ({ user: data?.user as HasuraUser }))
 
-export default function useMagicUserMetadata({
+export default function useUserMetadata({
   redirectTo,
   redirectIfFound,
 }: MetadataParams = {}) {
-  const { data, isLoading } = useSWR<{ user: HasuraUser }>("/api/user", fetcher)
+  const { data, isLoading } = useSWR("/api/user", fetcher)
   const user = data?.user
   const hasUser = Boolean(user)
 

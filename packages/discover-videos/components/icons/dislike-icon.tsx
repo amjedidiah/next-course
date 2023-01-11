@@ -1,8 +1,6 @@
-import { IconSvgProps } from "./icons";
+import { IconSvgProps } from "components/icons/icons"
 
-export default function Dislike({
-  selected = false,
-}: IconSvgProps) {
+export default function Dislike({ selected = false }: IconSvgProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

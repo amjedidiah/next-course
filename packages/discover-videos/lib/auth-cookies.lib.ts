@@ -27,7 +27,7 @@ export const removeTokenCookie = (res: NextApiResponse) => {
   res.setHeader("Set-Cookie", cookie)
 }
 
-export const parseCookies = (req: NextApiRequest) => {
+const parseCookies = (req: NextApiRequest) => {
   // For API Routes we don't need to parse the cookies.
   if (req.cookies) return req.cookies
 

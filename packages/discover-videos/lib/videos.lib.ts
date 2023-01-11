@@ -1,7 +1,8 @@
 import videoTestData from "data/videos.json"
-import { HasuraVideoStat } from "./hasura.lib"
+import { HasuraVideoStat } from "lib/hasura.lib"
+import { favouritedIsNone, formatCount, formatPublishTime, formatVideo } from "utils/video.util"
 
-export interface Video {
+export type Video = {
   id: string
   title: string
   imgUrl: string
@@ -22,7 +23,7 @@ type VideoData = {
   }
 }
 
-type VideoDataItem = {
+export type VideoDataItem = {
   id: {
     videoId: string
   }
@@ -42,90 +43,46 @@ type VideoDataItem = {
   }
 }
 
-const fetchVideos = async (search?: string) => {
-  const URI = !search
-    ? "/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=NG"
-    : `/search?part=snippet&q=${search}&type=video`
-  // Fetch from YouTube API
-  const data: VideoData = await fetch(
-    `https://youtube.googleapis.com/youtube/v3${URI}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&maxResults=25`
-  ).then((res) => res.json())
+const getVideoItems = async (search?: string) => {
+  if (process.env.NODE_ENV === "development") return videoTestData.items
 
-  return data
-}
-
-const formatCount = (count: string) => {
-  const num = Number(count)
-  if (num > 1000000) return `${(num / 1000000).toFixed(1)}M`
-  if (num > 1000) return `${(num / 1000).toFixed(1)}K`
-  return count
-}
-
-const formatPublishTime = (time: string) => {
-  const date = new Date(time)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const diffYears = Math.floor(diff / (1000 * 3600 * 24 * 365))
-  const diffMonths = Math.floor(diff / (1000 * 3600 * 24 * 30))
-  const diffWeeks = Math.floor(diff / (1000 * 3600 * 24 * 7))
-  const diffDays = Math.floor(diff / (1000 * 3600 * 24))
-  const diffHours = Math.floor(diff / (1000 * 3600))
-  const diffMinutes = Math.floor(diff / (1000 * 60))
-  const diffSeconds = Math.floor(diff / 1000)
-
-  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`
-  if (diffMonths > 0)
-    return `${diffMonths} month${diffMonths > 1 ? "s" : ""} ago`
-  if (diffWeeks > 0) return `${diffWeeks} week${diffWeeks > 1 ? "s" : ""} ago`
-  if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`
-  if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`
-  if (diffMinutes > 0)
-    return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`
-  if (diffSeconds > 0)
-    return `${diffSeconds} second${diffSeconds > 1 ? "s" : ""} ago`
-  return "Just now"
-}
-
-const formatVideo = (video: VideoDataItem): Video => ({
-  id: video?.id?.videoId,
-  title: video?.snippet?.title,
-  imgUrl: video?.snippet?.thumbnails?.high?.url,
-  subTitle: video?.snippet?.channelTitle,
-})
-
-const getVideoData = async () =>
-  process.env.NODE_ENV === "development" ? videoTestData : await fetchVideos()
-
-export async function getVideos(search?: string) {
   try {
-    const videoData =
-      process.env.NODE_ENV === "development"
-        ? videoTestData
-        : await fetchVideos(search)
+    const URI = !search
+      ? "/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=NG"
+      : `/search?part=snippet&q=${search}&type=video`
+    // Fetch from YouTube API
+    const { error, items } = (await fetch(
+      `https://youtube.googleapis.com/youtube/v3${URI}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&maxResults=25`
+    ).then((res) => res.json())) as VideoData
 
-    if (videoData?.error) throw new Error(videoData.error.message)
+    if (error) throw new Error(error.message)
 
-    // Return the formatted video data
-    return videoData.items.map((video) => formatVideo(video as VideoDataItem))
+    return items as VideoData["items"]
   } catch (error) {
     console.error({ error })
-    return []
+    return
   }
 }
 
+export async function getVideos(search?: string) {
+  const items = await getVideoItems(search)
+
+  if (!items) return
+  return items.map(formatVideo)
+}
+
 export async function getVideo(id: string) {
-  if(!id) return null
+  if (!id) return
   try {
-    const videoData = await fetch(
+    const { error, items } = (await fetch(
       `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-    ).then((res) => res.json())
+    ).then((res) => res.json())) as VideoData
 
-    if (videoData?.error) throw new Error(videoData.error.message)
+    if (error) throw new Error(error.message)
 
-    const video: VideoDataItem = videoData.items[0]
+    const video = items[0]
 
-    if(!video) return null
-
+    if (!video) return
     return {
       id: video.id?.videoId || video.id,
       title: video.snippet.title,
@@ -137,35 +94,72 @@ export async function getVideo(id: string) {
     } as VideoFull
   } catch (error) {
     console.error({ error })
-    return null
+    return
   }
 }
 
 export const getBannerVideo = async () => {
   const randomNum = Math.floor(Math.random() * 25)
-  const videoData = await getVideoData()
-  const randomVideo = videoData.items[randomNum]
+  const items = await getVideoItems()
 
+  if (!items) return
+  const randomVideo = items[randomNum]
+
+  if (!randomVideo) return
   return formatVideo(randomVideo as VideoDataItem)
 }
 
 export const getStaticVideoIds = async () => {
-  const videoData = await getVideoData()
-  return videoData.items.slice(0, 3).map((video) => video?.id?.videoId)
+  const items = await getVideoItems()
+
+  if (!items) return
+  return items.slice(0, 3).map((video) => video?.id?.videoId)
 }
 
-export const getVideoStat = async (id: string) => {
-  if(!id) return null
+export const getFavourited = async (id: string) => {
+  if (!id) return
 
   try {
-    const {videoStat} = await fetch(`api/stats?video_id=${id}`).then((res) =>
-      res.json()
-    ) as {videoStat: HasuraVideoStat}
+    const { videoStat }: { videoStat?: HasuraVideoStat } = await fetch(
+      `api/stats?video_id=${id}`
+    ).then((res) => res.json())
 
     return videoStat?.favourited
-
   } catch (error) {
     console.error({ error })
-    return undefined
+    return
+  }
+}
+
+export const updateFavourited = async ({
+  newFavourited,
+  favourited,
+  video_id,
+}: Pick<HasuraVideoStat, "favourited" | "video_id"> & {
+  newFavourited: HasuraVideoStat["favourited"]
+}) => {
+  if (!(video_id && favourited && newFavourited)) return
+
+  try {
+    const method = favouritedIsNone(favourited) ? "POST" : "PATCH"
+
+    const { videoStat }: { videoStat?: HasuraVideoStat } = await fetch(
+      "api/stats",
+      {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id,
+          favourited: newFavourited,
+        }),
+      }
+    ).then((res) => res.json())
+
+    return videoStat?.favourited
+  } catch (error) {
+    console.error({ error })
+    return
   }
 }

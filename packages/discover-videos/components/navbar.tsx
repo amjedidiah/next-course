@@ -1,4 +1,4 @@
-import useMagicUserMetadata from "hooks/use-magic-user"
+import useUserMetadata from "hooks/use-user-metadata"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useState } from "react"
@@ -10,7 +10,7 @@ type NavbarProps = {
 
 export default function Navbar({ minimal }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { userMetadata } = useMagicUserMetadata()
+  const { userMetadata } = useUserMetadata()
 
   const toggleDropdown = useCallback(
     () => setIsDropdownOpen(!isDropdownOpen),
